@@ -1,0 +1,5 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="LibStub.lua"/>
+	<Script file="tekKonfigScroll.lua"/>
+	<Script file="tekKonfigAboutPanel.lua"/>
+</Ui>
