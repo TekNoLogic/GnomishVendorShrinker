@@ -1,0 +1,21 @@
+GnomishVendorShrinker creates a simple, compact vendor frame, made to compliment GnomishAuctionShrinker.  GVS brings an interface similar to Auctioneer's "CompactUI" to the vendor frame.
+
+h2. Features
+
+* Simple one-line-per-item interface
+* Scrolling list, none of that "paging" crap that makes navigation slow
+* Clicking an item simply buys it, instead of picking up the item
+* Alt-click buys a full stack (or as close to a full stack as is possible for limited-stock items)
+* Ctrl- and shift-click behave as default (dress-up and paste link, respectively)
+
+h2. Un-features
+
+* No support for split-stack purchases, I'm not convinced it's needed.
+* No search... yet
+* No way to red-out known recipes... yet.
+
+h2. Links
+
+<b>Visit "my site":http://tekkub.net/ for more great addons<br>
+Please report all bugs and feature requests to my "Github tracker":http://github.com/tekkub/GnomishVendorShrinker/issues<br>
+Please direct all feedback and questions to my "Google Groups":http://groups-beta.google.com/group/tekkub-wow mailinglist.</b>
