@@ -1,5 +1,7 @@
 
 local NUMROWS, ICONSIZE, GAP, SCROLLSTEP = 14, 17, 4, 5
+local knowns = GVS_SCANNER
+GVS_SCANNER = nil
 
 
 for _,f in pairs{MerchantNextPageButton, MerchantPrevPageButton, MerchantPageText} do
@@ -154,6 +156,11 @@ for i=1,NUMROWS do
 		if self.extendedCost then MerchantFrame.extendedCost = self end
 	end)
 
+	local backdrop = row:CreateTexture(nil, "BACKGROUND")
+	backdrop:SetAllPoints()
+	backdrop:SetTexture("Interface\\Tooltips\\UI-Tooltip-Background")
+	row.backdrop = backdrop
+
 	local icon = CreateFrame('Frame', nil, row)
 	icon:SetHeight(ICONSIZE)
 	icon:SetWidth(ICONSIZE)
@@ -191,6 +198,9 @@ for i=1,NUMROWS do
 end
 
 
+local _, _, _, _, _, _, _, _, RECIPE = GetAuctionItemClasses()
+local quality_colors = {}
+for i=1,7 do quality_colors[i] = select(4, GetItemQualityColor(i)) end
 local offset = 0
 local function Refresh()
 	local n = GetMerchantNumItems()
@@ -199,9 +209,25 @@ local function Refresh()
 		if j > n then
 			row:Hide()
 		else
+			row.backdrop:Hide()
+
 			local name, itemTexture, itemPrice, itemStackCount, numAvailable, isUsable, extendedCost = GetMerchantItemInfo(j)
 			local link = GetMerchantItemLink(j)
-			local color = link and select(4, GetItemQualityColor(select(3, GetItemInfo(link)))) or "|cffffffff"
+			local color = "|cffffffff"
+			if link then
+				local name, link2, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(link)
+				color = quality_colors[quality]
+
+				if class == RECIPE and not knowns[link] then
+					row.backdrop:SetGradientAlpha("HORIZONTAL", 0,0,1,0.75, 0,0,1,0)
+					row.backdrop:Show()
+				end
+			end
+
+			if not isUsable then
+				row.backdrop:SetGradientAlpha("HORIZONTAL", 1,0,0,0.75, 1,0,0,0)
+				row.backdrop:Show()
+			end
 
 			row.icon:SetTexture(itemTexture)
 			row.ItemName:SetText((numAvailable > -1 and ("["..numAvailable.."] ") or "").. color.. (name or "<Loading item data>").. (itemStackCount > 1 and ("|r x"..itemStackCount) or ""))

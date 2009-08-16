@@ -13,4 +13,5 @@
 
 tekKonfig\tekKonfig.xml
 
+KnownScanner.lua
 GnomishVendorShrinker.lua
