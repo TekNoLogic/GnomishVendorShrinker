@@ -202,6 +202,7 @@ local _, _, _, _, _, _, _, _, RECIPE = GetAuctionItemClasses()
 local quality_colors = {}
 for i=1,7 do quality_colors[i] = select(4, GetItemQualityColor(i)) end
 local offset = 0
+local searchstring
 local function Refresh()
 	local n = GetMerchantNumItems()
 	for i,row in pairs(rows) do
@@ -228,6 +229,8 @@ local function Refresh()
 				row.backdrop:SetGradientAlpha("HORIZONTAL", 1,0,0,0.75, 1,0,0,0)
 				row.backdrop:Show()
 			end
+
+			row:SetAlpha(searchstring and not name:lower():match(searchstring) and 0.5 or 1)
 
 			row.icon:SetTexture(itemTexture)
 			row.ItemName:SetText((numAvailable > -1 and ("["..numAvailable.."] ") or "").. color.. (name or "<Loading item data>").. (itemStackCount > 1 and ("|r x"..itemStackCount) or ""))
@@ -259,6 +262,56 @@ local function Refresh()
 	end
 end
 
+
+local editbox = CreateFrame('EditBox', nil, GVS)
+editbox:SetAutoFocus(false)
+editbox:SetPoint("TOPLEFT", GVS, "BOTTOMLEFT", 0, -51)
+editbox:SetWidth(160)
+editbox:SetHeight(32)
+editbox:SetFontObject('GameFontHighlightSmall')
+
+local left = editbox:CreateTexture(nil, "BACKGROUND")
+left:SetWidth(8) left:SetHeight(20)
+left:SetPoint("LEFT", -5, 0)
+left:SetTexture("Interface\\Common\\Common-Input-Border")
+left:SetTexCoord(0, 0.0625, 0, 0.625)
+
+local right = editbox:CreateTexture(nil, "BACKGROUND")
+right:SetWidth(8) right:SetHeight(20)
+right:SetPoint("RIGHT", 0, 0)
+right:SetTexture("Interface\\Common\\Common-Input-Border")
+right:SetTexCoord(0.9375, 1, 0, 0.625)
+
+local center = editbox:CreateTexture(nil, "BACKGROUND")
+center:SetHeight(20)
+center:SetPoint("RIGHT", right, "LEFT", 0, 0)
+center:SetPoint("LEFT", left, "RIGHT", 0, 0)
+center:SetTexture("Interface\\Common\\Common-Input-Border")
+center:SetTexCoord(0.0625, 0.9375, 0, 0.625)
+
+editbox:SetScript("OnEscapePressed", editbox.ClearFocus)
+editbox:SetScript("OnEnterPressed", editbox.ClearFocus)
+editbox:SetScript("OnEditFocusGained", function(self)
+	if not searchstring then
+		self:SetText("")
+		self:SetTextColor(1,1,1,1)
+	end
+end)
+editbox:SetScript("OnEditFocusLost", function(self)
+	if self:GetText() == "" then
+		self:SetText("Search...")
+		self:SetTextColor(0.75, 0.75, 0.75, 1)
+	end
+end)
+editbox:SetScript("OnTextChanged", function(self)
+	local t = self:GetText()
+	searchstring = t ~= "" and t ~= "Search..." and t:lower() or nil
+	Refresh()
+end)
+editbox:SetScript("OnShow", function(self)
+	self:SetText("Search...")
+	self:SetTextColor(0.75, 0.75, 0.75, 1)
+end)
 
 local scrollbar = LibStub("tekKonfig-Scroll").new(GVS, 0, SCROLLSTEP)
 local f = scrollbar:GetScript("OnValueChanged")

@@ -9,11 +9,11 @@ h2. Features
 * Ctrl- and shift-click behave as default (dress-up and paste link, respectively)
 * Recipes you do not yet know are highlighted in blue
 * Items you cannot use are highlighted in red
+* Search box to help you find that item you're after on a vendor with hundreds of items
 
 h2. Un-features
 
 * No support for split-stack purchases, I'm not convinced it's needed.
-* No search... yet
 
 h2. Links
 
