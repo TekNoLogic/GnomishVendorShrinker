@@ -69,7 +69,7 @@ local function GSC(cash)
 	elseif g > 0 then return string.format(" |cffffd700%d.|cffc7c7cf%02d.|cffeda55f%02d", g, s, c)
 	elseif s > 0 and c == 0 then return string.format(" |cffc7c7cf%d", s)
 	elseif s > 0 then return string.format(" |cffc7c7cf%d.|cffeda55f%02d", s, c)
-	else return string.format(" |cffc7c7cf%d", c) end
+	else return string.format(" |cffeda55f%02d", c) end
 end
 
 
