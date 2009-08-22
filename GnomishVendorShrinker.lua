@@ -199,7 +199,7 @@ end
 
 
 local _, _, _, _, _, _, _, _, RECIPE = GetAuctionItemClasses()
-local quality_colors = {}
+local quality_colors = setmetatable({}, {__index = function() return "|cffffffff" end})
 for i=1,7 do quality_colors[i] = select(4, GetItemQualityColor(i)) end
 local offset = 0
 local searchstring
@@ -214,7 +214,7 @@ local function Refresh()
 
 			local name, itemTexture, itemPrice, itemStackCount, numAvailable, isUsable, extendedCost = GetMerchantItemInfo(j)
 			local link = GetMerchantItemLink(j)
-			local color = "|cffffffff"
+			local color = quality_colors.default
 			if link then
 				local name, link2, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(link)
 				color = quality_colors[quality]
