@@ -30,15 +30,26 @@ local function OnClick(self, button)
 end
 
 
-local function BuyItem(self, fullstack)
-	local id = self:GetID()
+local function PopoutOnClick(self, button)
+	local id = self:GetParent():GetID()
 	local link = GetMerchantItemLink(id)
 	if not link then return end
 
 	local _, _, _, vendorStackSize, numAvailable = GetMerchantItemInfo(id)
 	local maxPurchase = GetMerchantItemMaxStack(id)
 	local _, _, _, _, _, _, _, itemStackSize = GetItemInfo(link)
-	local quantity = fullstack and itemStackSize/vendorStackSize or 1
+
+	local size = numAvailable > 0 and numAvailable or itemStackSize
+	-- OpenStackSplitFrame(size, self, "LEFT", "RIGHT")
+	OpenStackSplitFrame(250, self, "LEFT", "RIGHT")
+end
+
+
+local function Purchase(id, quantity)
+	local _, _, _, vendorStackSize, numAvailable = GetMerchantItemInfo(id)
+	local maxPurchase = GetMerchantItemMaxStack(id)
+	quantity = quantity/vendorStackSize
+
 	if numAvailable > 0 and numAvailable < quantity then quantity = numAvailable end
 	local purchased = 0
 	while purchased < quantity do
@@ -46,6 +57,21 @@ local function BuyItem(self, fullstack)
 		purchased = purchased + buyamount
 		BuyMerchantItem(id, buyamount)
 	end
+end
+
+
+local function BuyItem(self, fullstack)
+	local id = self:GetID()
+	local link = GetMerchantItemLink(id)
+	if not link then return end
+
+	local _, _, _, _, _, _, _, stack = GetItemInfo(link)
+	Purchase(id, fullstack and stack or 1)
+end
+
+
+local function PopoutSplitStack(self, qty)
+	Purchase(self:GetParent():GetID(), qty)
 end
 
 
@@ -94,7 +120,7 @@ local function GetAltCurrencyFrame(frame)
 	local anchor = #frame.altframes > 0 and frame.altframes[#frame.altframes].text
 	local f = CreateFrame('Frame', nil, frame)
 	f:SetWidth(ICONSIZE) f:SetHeight(ICONSIZE)
-	f:SetPoint("RIGHT", anchor or frame.ItemPrice, "LEFT")
+	f:SetPoint("RIGHT", anchor or frame.popout, "LEFT")
 
 	f.icon = f:CreateTexture()
 	f.icon:SetWidth(ICONSIZE) f.icon:SetHeight(ICONSIZE)
@@ -136,10 +162,11 @@ local function AddAltCurrency(frame, i)
 end
 
 
+local ROWHEIGHT = 21
 local rows = {}
 for i=1,NUMROWS do
 	local row = CreateFrame('Button', nil, GVS) -- base frame
-	row:SetHeight(21)
+	row:SetHeight(ROWHEIGHT)
 	row:SetPoint("TOP", i == 1 and GVS or rows[i-1], i == 1 and "TOP" or "BOTTOM")
 	row:SetPoint("LEFT")
 	row:SetPoint("RIGHT", -19, 0)
@@ -174,8 +201,19 @@ for i=1,NUMROWS do
 	ItemName:SetJustifyH('LEFT')
 	row.ItemName = ItemName
 
+	local popout = CreateFrame("Button", nil, row)
+	popout:SetPoint("RIGHT")
+	popout:SetWidth(ROWHEIGHT/2) popout:SetHeight(ROWHEIGHT)
+	popout:SetNormalTexture("Interface\\PaperDollInfoFrame\\UI-GearManager-FlyoutButton")
+	popout:SetHighlightTexture("Interface\\PaperDollInfoFrame\\UI-GearManager-FlyoutButton")
+	popout:GetNormalTexture():SetTexCoord(0.15625, 0.5, 0.84375, 0.5, 0.15625, 0, 0.84375, 0)
+	popout:GetHighlightTexture():SetTexCoord(0.15625, 1, 0.84375, 1, 0.15625, 0.5, 0.84375, 0.5)
+	popout:SetScript("OnClick", PopoutOnClick)
+	popout.SplitStack = PopoutSplitStack
+	row.popout = popout
+
 	local ItemPrice = row:CreateFontString(nil, nil, "NumberFontNormalSmall")
-	ItemPrice:SetPoint('RIGHT', row, -2, 0)
+	ItemPrice:SetPoint('RIGHT', popout, "LEFT", -2, 0)
 	row.ItemPrice = ItemPrice
 
 	row.altframes = {}
