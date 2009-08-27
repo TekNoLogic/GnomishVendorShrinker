@@ -120,7 +120,7 @@ local function GetAltCurrencyFrame(frame)
 	local anchor = #frame.altframes > 0 and frame.altframes[#frame.altframes].text
 	local f = CreateFrame('Frame', nil, frame)
 	f:SetWidth(ICONSIZE) f:SetHeight(ICONSIZE)
-	f:SetPoint("RIGHT", anchor or frame.popout, "LEFT")
+	f:SetPoint("RIGHT", anchor or frame.ItemPrice, "LEFT")
 
 	f.icon = f:CreateTexture()
 	f.icon:SetWidth(ICONSIZE) f.icon:SetHeight(ICONSIZE)
