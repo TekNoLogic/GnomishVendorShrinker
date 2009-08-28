@@ -368,6 +368,7 @@ GVS:SetScript("OnShow", function()
 	scrollbar:SetValue(0)
 	Refresh()
 end)
+GVS:SetScript("OnHide", function() if StackSplitFrame:IsVisible() then StackSplitFrame:Hide() end end)
 
 
 -- Reanchor the buyback button, it acts weird when switching tabs otherwise...
