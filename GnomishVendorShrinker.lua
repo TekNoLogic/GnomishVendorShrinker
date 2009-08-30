@@ -268,7 +268,7 @@ local function Refresh()
 				row.backdrop:Show()
 			end
 
-			row:SetAlpha(searchstring and not name:lower():match(searchstring) and 0.5 or 1)
+			row:SetAlpha(searchstring and name and not name:lower():match(searchstring) and 0.5 or 1)
 
 			row.icon:SetTexture(itemTexture)
 			row.ItemName:SetText((numAvailable > -1 and ("["..numAvailable.."] ") or "").. color.. (name or "<Loading item data>").. (itemStackCount > 1 and ("|r x"..itemStackCount) or ""))
