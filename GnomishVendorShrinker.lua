@@ -1,6 +1,7 @@
 
 local NUMROWS, ICONSIZE, GAP, SCROLLSTEP = 14, 17, 4, 5
 local knowns = GVS_SCANNER
+local HONOR_POINTS, ARENA_POINTS = "|cffffffff|Hitem:43308:0:0:0:0:0:0:0:0|h[Honor Points]|h|r", "|cffffffff|Hitem:43307:0:0:0:0:0:0:0:0|h[Arena Points]|h|r"
 GVS_SCANNER = nil
 
 
@@ -77,7 +78,7 @@ end
 
 local function OnEnter(self)
 	GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-	if self.tiptext then GameTooltip:SetText(self.tiptext) else GameTooltip:SetMerchantCostItem(self.index, self.itemIndex) end
+	if self.link then GameTooltip:SetHyperlink(self.link) else GameTooltip:SetMerchantCostItem(self.index, self.itemIndex) end
 end
 
 
@@ -99,11 +100,11 @@ local function GSC(cash)
 end
 
 
-local function SetValue(self, text, icon, tiptext)
+local function SetValue(self, text, icon, link)
 	self.text:SetText(text)
 	self.icon:SetTexture(icon)
-	self.tiptext, self.index, self.itemIndex = tiptext
-	if tiptext == HONOR_POINTS then
+	self.link, self.index, self.itemIndex = link
+	if link == HONOR_POINTS then
 		self.icon:SetPoint("RIGHT", -2, 0)
 		self.text:SetPoint("RIGHT", self.icon, "LEFT", -GAP/2 + 2, 0)
 	else
@@ -145,7 +146,7 @@ local function AddAltCurrency(frame, i)
 		local f = frame:GetAltCurrencyFrame()
 		local texture, price = GetMerchantItemCostItem(i, j)
 		f:SetValue(price, texture)
-		f.index, f.itemIndex = i, j
+		f.index, f.itemIndex, f.link = i, j
 		lastframe = f.text
 	end
 	if arenaPoints > 0 then
