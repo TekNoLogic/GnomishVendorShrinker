@@ -1,3 +1,9 @@
+3.2.0.3-Beta
+    Switch to actual honor/arena point itemIDs so we get better tooltips
+    Stupid nils
+    Hide splitstack onhide
+    Fix gold and token items anchoring
+
 3.2.0.2-Beta
     Add splitstack frame, without the retarded max purchase limits the default vendor frame uses
     Ensure we always have a default item quality color
