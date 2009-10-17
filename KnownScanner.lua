@@ -3,7 +3,7 @@ local tip = CreateFrame("GameTooltip")
 tip:SetOwner(WorldFrame, "ANCHOR_NONE")
 
 local lcache = {}
-for i=1,30 do
+for i=1,40 do
 	lcache[i] = tip:CreateFontString()
 	-- lcache[i]:SetFontObject(GameFontNormal)
 	tip:AddFontStrings(lcache[i], tip:CreateFontString())
