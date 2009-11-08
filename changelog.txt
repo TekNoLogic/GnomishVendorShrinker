@@ -1,3 +1,6 @@
+3.2.0.4-Beta
+    Increase number of lines in tip scanner
+
 3.2.0.3-Beta
     Switch to actual honor/arena point itemIDs so we get better tooltips
     Stupid nils
