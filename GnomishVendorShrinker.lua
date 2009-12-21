@@ -365,9 +365,10 @@ end)
 local offset = 0
 GVS:EnableMouseWheel(true)
 GVS:SetScript("OnMouseWheel", function(self, value) scrollbar:SetValue(scrollbar:GetValue() - value * SCROLLSTEP) end)
-GVS:SetScript("OnShow", function()
-	scrollbar:SetMinMaxValues(0, math.max(0, GetMerchantNumItems() - NUMROWS))
-	scrollbar:SetValue(0)
+GVS:SetScript("OnShow", function(self, noreset)
+	local max = math.max(0, GetMerchantNumItems() - NUMROWS)
+	scrollbar:SetMinMaxValues(0, max)
+	scrollbar:SetValue(noreset and math.min(scrollbar:GetValue(), max) or 0)
 	Refresh()
 end)
 GVS:SetScript("OnHide", function() if StackSplitFrame:IsVisible() then StackSplitFrame:Hide() end end)
@@ -380,7 +381,7 @@ MerchantBuyBackItem:SetPoint("BOTTOMLEFT", 189, 90)
 
 local function Show()
 	for i=1,12 do _G["MerchantItem"..i]:Hide() end
-	if GVS:IsShown() then Refresh() else GVS:Show() end
+	if GVS:IsShown() then GVS:GetScript("OnShow")(GVS, true) else GVS:Show() end
 end
 hooksecurefunc("MerchantFrame_UpdateMerchantInfo", Show)
 
