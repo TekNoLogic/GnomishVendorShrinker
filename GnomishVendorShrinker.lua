@@ -177,6 +177,7 @@ for i=1,NUMROWS do
 	row:SetHighlightTexture("Interface\\HelpFrame\\HelpFrameButton-Highlight")
 	row:GetHighlightTexture():SetTexCoord(0, 1, 0, 0.578125)
 
+	row:RegisterForClicks("AnyUp")
 	row:SetScript('OnClick', OnClick)
 	row:SetScript('OnDragStart', function(self, button)
 		MerchantFrame.extendedCost = nil
