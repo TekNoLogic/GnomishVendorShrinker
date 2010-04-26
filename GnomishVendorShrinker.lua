@@ -238,6 +238,15 @@ for i=1,NUMROWS do
 end
 
 
+local default_grad = {0,1,0,0.75, 0,1,0,0} -- green
+local grads = setmetatable({
+	red = {1,0,0,0.75, 1,0,0,0},
+	[1] = {1,1,1,0.75, 1,1,1,0}, -- white
+	[2] = default_grad, -- green
+	[3] = {0.5,0.5,1,1, 0,0,1,0}, -- blue
+	[4] = {1,0,1,0.75, 1,0,1,0}, -- purple
+	[7] = {1,.75,.5,0.75, 1,.75,.5,0}, -- heirloom
+}, {__index = function(t,i) t[i] = default_grad return default_grad end})
 local _, _, _, _, _, _, _, _, RECIPE = GetAuctionItemClasses()
 local quality_colors = setmetatable({}, {__index = function() return "|cffffffff" end})
 for i=1,7 do quality_colors[i] = select(4, GetItemQualityColor(i)) end
@@ -260,13 +269,13 @@ local function Refresh()
 				color = quality_colors[quality]
 
 				if class == RECIPE and not knowns[link] then
-					row.backdrop:SetGradientAlpha("HORIZONTAL", 0,0,1,0.75, 0,0,1,0)
+					row.backdrop:SetGradientAlpha("HORIZONTAL", unpack(grads[quality]))
 					row.backdrop:Show()
 				end
 			end
 
 			if not isUsable then
-				row.backdrop:SetGradientAlpha("HORIZONTAL", 1,0,0,0.75, 1,0,0,0)
+				row.backdrop:SetGradientAlpha("HORIZONTAL", unpack(grads.red))
 				row.backdrop:Show()
 			end
 
