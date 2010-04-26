@@ -1,3 +1,6 @@
+3.3.0.6-Beta
+    Better recipe highlighting
+
 3.3.0.5-Beta
     Fix refresh "issue"?
     Oops, I always forget to register all clicks... stupid bad blizzy defaults
