@@ -1,8 +1,8 @@
 
+local myname, ns = ...
+
 local NUMROWS, ICONSIZE, GAP, SCROLLSTEP = 14, 17, 4, 5
-local knowns = GVS_SCANNER
 local HONOR_POINTS, ARENA_POINTS = "|cffffffff|Hitem:43308:0:0:0:0:0:0:0:0|h[Honor Points]|h|r", "|cffffffff|Hitem:43307:0:0:0:0:0:0:0:0|h[Arena Points]|h|r"
-GVS_SCANNER = nil
 
 
 for _,f in pairs{MerchantNextPageButton, MerchantPrevPageButton, MerchantPageText} do
@@ -85,18 +85,6 @@ end
 local function OnLeave()
 	GameTooltip:Hide()
 	ResetCursor()
-end
-
-
-local function GSC(cash)
-	if not cash then return end
-	local g, s, c = floor(cash/10000), floor((cash/100)%100), cash%100
-	if g > 0 and s == 0 and c == 0 then return string.format(" |cffffd700%d", g)
-	elseif g > 0 and c == 0 then return string.format(" |cffffd700%d.|cffc7c7cf%02d", g, s)
-	elseif g > 0 then return string.format(" |cffffd700%d.|cffc7c7cf%02d.|cffeda55f%02d", g, s, c)
-	elseif s > 0 and c == 0 then return string.format(" |cffc7c7cf%d", s)
-	elseif s > 0 then return string.format(" |cffc7c7cf%d.|cffeda55f%02d", s, c)
-	else return string.format(" |cffeda55f%02d", c) end
 end
 
 
@@ -214,7 +202,7 @@ for i=1,NUMROWS do
 	popout.SplitStack = PopoutSplitStack
 	row.popout = popout
 
-	local ItemPrice = row:CreateFontString(nil, nil, "NumberFontNormalSmall")
+	local ItemPrice = row:CreateFontString(nil, nil, "NumberFontNormal")
 	ItemPrice:SetPoint('RIGHT', popout, "LEFT", -2, 0)
 	row.ItemPrice = ItemPrice
 
@@ -268,7 +256,7 @@ local function Refresh()
 				local name, link2, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(link)
 				color = quality_colors[quality]
 
-				if class == RECIPE and not knowns[link] then
+				if class == RECIPE and not ns.knowns[link] then
 					row.backdrop:SetGradientAlpha("HORIZONTAL", unpack(grads[quality]))
 					row.backdrop:Show()
 				end
@@ -291,14 +279,14 @@ local function Refresh()
 				row.link, row.texture, row.extendedCost = link, itemTexture, true
 			end
 			if itemPrice > 0 then
-				row.ItemPrice:SetText(GSC(itemPrice))
+				row.ItemPrice:SetText(ns.GSC(itemPrice))
 				row.Price = itemPrice
 			end
 			if extendedCost and (itemPrice <= 0) then
 				row.ItemPrice:SetText()
 				row.Price = 0
 			elseif extendedCost and (itemPrice > 0) then
-				row.ItemPrice:SetText(GSC(itemPrice))
+				row.ItemPrice:SetText(ns.GSC(itemPrice))
 			else
 				row.ItemName:SetPoint("RIGHT", row.ItemPrice, "LEFT", -GAP, 0)
 				row.extendedCost = nil

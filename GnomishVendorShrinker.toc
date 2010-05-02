@@ -11,6 +11,7 @@
 ## LoadManagers: AddonLoader
 ## X-LoadOn-Merchant: true
 
+tekFunks\gsc.lua
 tekKonfig\tekKonfig.xml
 
 KnownScanner.lua

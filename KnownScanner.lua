@@ -1,15 +1,16 @@
 
+local myname, ns = ...
+
 local tip = CreateFrame("GameTooltip")
 tip:SetOwner(WorldFrame, "ANCHOR_NONE")
 
 local lcache = {}
 for i=1,40 do
 	lcache[i] = tip:CreateFontString()
-	-- lcache[i]:SetFontObject(GameFontNormal)
 	tip:AddFontStrings(lcache[i], tip:CreateFontString())
 end
 
-local knowns = setmetatable({}, {__index = function(t, i)
+ns.knowns = setmetatable({}, {__index = function(t, i)
 	tip:ClearLines()
 	if not tip:IsOwned(WorldFrame) then tip:SetOwner(WorldFrame, "ANCHOR_NONE") end
 	tip:SetHyperlink(i)
@@ -20,5 +21,3 @@ local knowns = setmetatable({}, {__index = function(t, i)
 		end
 	end
 end})
-
-GVS_SCANNER = knowns
