@@ -1,5 +1,6 @@
 
 local myname, ns = ...
+ns.IHASCAT = select(4, GetBuildInfo()) >= 40000
 
 local NUMROWS, ICONSIZE, GAP, SCROLLSTEP = 14, 17, 4, 5
 local HONOR_POINTS, ARENA_POINTS = "|cffffffff|Hitem:43308:0:0:0:0:0:0:0:0|h[Honor Points]|h|r", "|cffffffff|Hitem:43307:0:0:0:0:0:0:0:0|h[Arena Points]|h|r"
@@ -130,6 +131,7 @@ end
 local function AddAltCurrency(frame, i)
 	local lastframe = frame.ItemPrice
 	local honorPoints, arenaPoints, itemCount = GetMerchantItemCostInfo(i)
+	if ns.IHASCAT then itemCount, honorPoints, arenaPoints = honorPoints, 0, 0 end
 	for j=itemCount,1,-1 do
 		local f = frame:GetAltCurrencyFrame()
 		local texture, price = GetMerchantItemCostItem(i, j)
