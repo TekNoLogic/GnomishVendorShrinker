@@ -50,7 +50,6 @@ end
 local function Purchase(id, quantity)
 	local _, _, _, vendorStackSize, numAvailable = GetMerchantItemInfo(id)
 	local maxPurchase = GetMerchantItemMaxStack(id)
-	quantity = quantity/vendorStackSize
 
 	if numAvailable > 0 and numAvailable < quantity then quantity = numAvailable end
 	local purchased = 0
@@ -67,8 +66,9 @@ local function BuyItem(self, fullstack)
 	local link = GetMerchantItemLink(id)
 	if not link then return end
 
-	local _, _, _, _, _, _, _, stack = GetItemInfo(link)
-	Purchase(id, fullstack and stack or 1)
+	local _, _, _, vendorStackSize = GetMerchantItemInfo(id)
+	local _, _, _, _, _, _, _, itemStackSize = GetItemInfo(link)
+	Purchase(id, fullstack and itemStackSize or vendorStackSize or 1)
 end
 
 
