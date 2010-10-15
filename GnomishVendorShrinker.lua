@@ -169,6 +169,7 @@ for i=1,NUMROWS do
 
 	row:RegisterForClicks("AnyUp")
 	row:SetScript('OnClick', OnClick)
+	row:RegisterForDrag("LeftButton")
 	row:SetScript('OnDragStart', function(self, button)
 		MerchantFrame.extendedCost = nil
 		PickupMerchantItem(self:GetID())
