@@ -1,3 +1,6 @@
+4.0.0.8-Beta
+    Fix known recipe highlight
+
 4.0.0.7-Beta
     Helps to register for drag.
     Stack-sold items changed with 4.0
