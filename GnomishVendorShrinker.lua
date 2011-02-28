@@ -89,10 +89,20 @@ local function OnLeave()
 end
 
 
+local function GetCurencyCount(item)
+	for i=1,GetCurrencyListSize() do
+		local name, _, _, _, _, count = GetCurrencyListInfo(i)
+		if item == name then return count end
+	end
+end
+
+
 local function SetValue(self, text, icon, link)
-	self.text:SetText(text)
+	local color = link and GetCurencyCount(link) >= text and "|cffffffff" or "|cffff9999"
+	self.text:SetText(color..text)
 	self.icon:SetTexture(icon)
-	self.link, self.index, self.itemIndex = link
+	self.link, self.index, self.itemIndex = nil
+	if link and link:match("^item:%d+") then self.link = link end
 	self:Show()
 end
 
@@ -129,8 +139,8 @@ local function AddAltCurrency(frame, i)
 	if ns.IHASCAT then itemCount, honorPoints, arenaPoints = honorPoints, 0, 0 end
 	for j=itemCount,1,-1 do
 		local f = frame:GetAltCurrencyFrame()
-		local texture, price = GetMerchantItemCostItem(i, j)
-		f:SetValue(price, texture)
+		local texture, price, _, name = GetMerchantItemCostItem(i, j)
+		f:SetValue(price, texture, name)
 		f.index, f.itemIndex, f.link = i, j
 		lastframe = f.text
 	end
