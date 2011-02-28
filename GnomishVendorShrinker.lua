@@ -98,11 +98,15 @@ end
 
 
 local function SetValue(self, text, icon, link)
-	local color = link and GetCurencyCount(link) >= text and "|cffffffff" or "|cffff9999"
+	local color = ""
+	local id = link and link:match("item:(%d+)")
+	self.link, self.index, self.itemIndex = nil
+	if id then self.link = link end
+	if id and GetItemCount(id) < text or link and not id and GetCurencyCount(link) < text then
+		color = "|cffff9999"
+	end
 	self.text:SetText(color..text)
 	self.icon:SetTexture(icon)
-	self.link, self.index, self.itemIndex = nil
-	if link and link:match("^item:%d+") then self.link = link end
 	self:Show()
 end
 
@@ -139,8 +143,8 @@ local function AddAltCurrency(frame, i)
 	if ns.IHASCAT then itemCount, honorPoints, arenaPoints = honorPoints, 0, 0 end
 	for j=itemCount,1,-1 do
 		local f = frame:GetAltCurrencyFrame()
-		local texture, price, _, name = GetMerchantItemCostItem(i, j)
-		f:SetValue(price, texture, name)
+		local texture, price, link, name = GetMerchantItemCostItem(i, j)
+		f:SetValue(price, texture, link or name)
 		f.index, f.itemIndex, f.link = i, j
 		lastframe = f.text
 	end
