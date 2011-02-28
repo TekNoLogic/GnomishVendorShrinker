@@ -93,13 +93,6 @@ local function SetValue(self, text, icon, link)
 	self.text:SetText(text)
 	self.icon:SetTexture(icon)
 	self.link, self.index, self.itemIndex = link
-	if link == HONOR_POINTS then
-		self.icon:SetPoint("RIGHT", -2, 0)
-		self.text:SetPoint("RIGHT", self.icon, "LEFT", -GAP/2 + 2, 0)
-	else
-		self.icon:SetPoint("RIGHT")
-		self.text:SetPoint("RIGHT", self.icon, "LEFT", -GAP/2, 0)
-	end
 	self:Show()
 end
 
@@ -114,8 +107,10 @@ local function GetAltCurrencyFrame(frame)
 
 	f.icon = f:CreateTexture()
 	f.icon:SetWidth(ICONSIZE) f.icon:SetHeight(ICONSIZE)
+	f.icon:SetPoint("RIGHT")
 
 	f.text = f:CreateFontString(nil, nil, "NumberFontNormalSmall")
+	f.text:SetPoint("RIGHT", f.icon, "LEFT", -GAP/2, 0)
 
 	f.SetValue = SetValue
 
