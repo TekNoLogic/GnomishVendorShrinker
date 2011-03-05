@@ -1,3 +1,6 @@
+4.0.0.9-Beta
+    Make price text red if we can't afford an item
+
 4.0.0.8-Beta
     Fix known recipe highlight
 
