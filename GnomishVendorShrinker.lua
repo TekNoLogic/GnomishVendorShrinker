@@ -1,4 +1,4 @@
-
+local ItemSearch = LibStub('LibItemSearch-1.0')
 local myname, ns = ...
 ns.IHASCAT = select(4, GetBuildInfo()) >= 40000
 
@@ -167,7 +167,6 @@ local rows = {}
 for i=1,NUMROWS do
 	local row = CreateFrame('Button', nil, GVS) -- base frame
 	row:SetHeight(ROWHEIGHT)
-	row:SetPoint("TOP", i == 1 and GVS or rows[i-1], i == 1 and "TOP" or "BOTTOM")
 	row:SetPoint("LEFT")
 	row:SetPoint("RIGHT", -19, 0)
 
@@ -247,70 +246,82 @@ local grads = setmetatable({
 	[4] = {1,0,1,0.75, 1,0,1,0}, -- purple
 	[7] = {1,.75,.5,0.75, 1,.75,.5,0}, -- heirloom
 }, {__index = function(t,i) t[i] = default_grad return default_grad end})
-local _, _, _, _, _, _, RECIPE = GetAuctionItemClasses()
+local RECIPE = select(7, GetAuctionItemClasses())
 local quality_colors = setmetatable({}, {__index = function() return "|cffffffff" end})
 for i=1,7 do quality_colors[i] = select(4, GetItemQualityColor(i)) end
+
+local ShowMerchantItem = function (r, i)
+	local name, itemTexture, itemPrice, itemStackCount, numAvailable, isUsable, extendedCost = GetMerchantItemInfo(i)
+	local link = GetMerchantItemLink(i)
+	local color = quality_colors.default
+	local row = rows[r]
+	row.backdrop:Hide()
+	if link then
+		local name, link2, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(link)
+		color = quality_colors[quality]
+
+		if class == RECIPE and not ns.knowns[link] then
+			row.backdrop:SetGradientAlpha("HORIZONTAL", unpack(grads[quality]))
+			row.backdrop:Show()
+		end
+	end
+
+	if not isUsable then
+		row.backdrop:SetGradientAlpha("HORIZONTAL", unpack(grads.red))
+		row.backdrop:Show()
+	end
+
+	row.icon:SetTexture(itemTexture)
+	row.ItemName:SetText((numAvailable > -1 and ("["..numAvailable.."] ") or "").. color.. (name or "<Loading item data>").. (itemStackCount > 1 and ("|r x"..itemStackCount) or ""))
+
+	for i,v in pairs(row.altframes) do v:Hide() end
+	row.altcurrency = extendedCost
+	if extendedCost then
+		row:AddAltCurrency(i)
+		row.link, row.texture, row.extendedCost = link, itemTexture, true
+	end
+	if itemPrice > 0 then
+		row.ItemPrice:SetText(ns.GSC(itemPrice))
+		row.Price = itemPrice
+	end
+	if extendedCost and (itemPrice <= 0) then
+		row.ItemPrice:SetText()
+		row.Price = 0
+	elseif extendedCost and (itemPrice > 0) then
+		row.ItemPrice:SetText(ns.GSC(itemPrice))
+	else
+		row.ItemName:SetPoint("RIGHT", row.ItemPrice, "LEFT", -GAP, 0)
+		row.extendedCost = nil
+	end
+
+	if isUsable then row.icon:SetVertexColor(1, 1, 1) else row.icon:SetVertexColor(.9, 0, 0) end
+	row:SetID(i)
+	row:Show()
+	row:SetPoint("TOP", r == 1 and GVS or rows[r-1], r == 1 and "TOP" or "BOTTOM")
+end
+
+local scrollbar = LibStub("tekKonfig-Scroll").new(GVS, 0, SCROLLSTEP)
 local offset = 0
 local searchstring
 local function Refresh()
 	local n = GetMerchantNumItems()
-	for i,row in pairs(rows) do
-		local j = i + offset
-		if j > n then
-			row:Hide()
-		else
-			row.backdrop:Hide()
-
-			local name, itemTexture, itemPrice, itemStackCount, numAvailable, isUsable, extendedCost = GetMerchantItemInfo(j)
-			local link = GetMerchantItemLink(j)
-			local color = quality_colors.default
-			if link then
-				local name, link2, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(link)
-				color = quality_colors[quality]
-
-				if class == RECIPE and not ns.knowns[link] then
-					row.backdrop:SetGradientAlpha("HORIZONTAL", unpack(grads[quality]))
-					row.backdrop:Show()
-				end
+	local r = 1
+	local v = 0
+	for i=1,n do
+		local link = GetMerchantItemLink(i)
+		if ItemSearch:Find(link, searchstring) then
+			if v >= offset and v < offset + NUMROWS then
+				ShowMerchantItem(r, i)
+				r = r + 1
 			end
-
-			if not isUsable then
-				row.backdrop:SetGradientAlpha("HORIZONTAL", unpack(grads.red))
-				row.backdrop:Show()
-			end
-
-			row:SetAlpha(searchstring and name and not name:lower():match(searchstring) and 0.5 or 1)
-
-			row.icon:SetTexture(itemTexture)
-			row.ItemName:SetText((numAvailable > -1 and ("["..numAvailable.."] ") or "").. color.. (name or "<Loading item data>").. (itemStackCount > 1 and ("|r x"..itemStackCount) or ""))
-
-			for i,v in pairs(row.altframes) do v:Hide() end
-			row.altcurrency = extendedCost
-			if extendedCost then
-				row:AddAltCurrency(j)
-				row.link, row.texture, row.extendedCost = link, itemTexture, true
-			end
-			if itemPrice > 0 then
-				row.ItemPrice:SetText(ns.GSC(itemPrice))
-				row.Price = itemPrice
-			end
-			if extendedCost and (itemPrice <= 0) then
-				row.ItemPrice:SetText()
-				row.Price = 0
-			elseif extendedCost and (itemPrice > 0) then
-				row.ItemPrice:SetText(ns.GSC(itemPrice))
-			else
-				row.ItemName:SetPoint("RIGHT", row.ItemPrice, "LEFT", -GAP, 0)
-				row.extendedCost = nil
-			end
-
-			if isUsable then row.icon:SetVertexColor(1, 1, 1) else row.icon:SetVertexColor(.9, 0, 0) end
-			row:SetID(j)
-			row:Show()
+			v = v + 1
 		end
 	end
+	scrollbar:SetMinMaxValues(0, math.max(0, v - NUMROWS))
+	for i=r,NUMROWS do
+		rows[i]:Hide()
+	end
 end
-
 
 local editbox = CreateFrame('EditBox', nil, GVS)
 editbox:SetAutoFocus(false)
@@ -362,7 +373,6 @@ editbox:SetScript("OnShow", function(self)
 	self:SetTextColor(0.75, 0.75, 0.75, 1)
 end)
 
-local scrollbar = LibStub("tekKonfig-Scroll").new(GVS, 0, SCROLLSTEP)
 local f = scrollbar:GetScript("OnValueChanged")
 scrollbar:SetScript("OnValueChanged", function(self, value, ...)
 	offset = math.floor(value)

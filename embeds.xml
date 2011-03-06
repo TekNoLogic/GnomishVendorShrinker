@@ -1,0 +1,4 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="libs\LibStub\LibStub.lua"/>
+	<Script file="libs\LibItemSearch-1.0\LibItemSearch-1.0.lua"/>
+</Ui>

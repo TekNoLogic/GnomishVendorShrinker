@@ -1,0 +1,6 @@
+[submodule "libs/LibItemSearch-1.0"]
+	path = libs/LibItemSearch-1.0
+	url = git@github.com:Tuller/LibItemSearch-1.0.git
+[submodule "libs/LibStub"]
+	path = libs/LibStub
+	url = git://github.com/p3lim/LibStub.git
