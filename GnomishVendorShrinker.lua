@@ -1,3 +1,4 @@
+
 local ItemSearch = LibStub('LibItemSearch-1.0')
 local myname, ns = ...
 ns.IHASCAT = select(4, GetBuildInfo()) >= 40000
@@ -167,6 +168,7 @@ local rows = {}
 for i=1,NUMROWS do
 	local row = CreateFrame('Button', nil, GVS) -- base frame
 	row:SetHeight(ROWHEIGHT)
+	row:SetPoint("TOP", r == 1 and GVS or rows[r-1], r == 1 and "TOP" or "BOTTOM")
 	row:SetPoint("LEFT")
 	row:SetPoint("RIGHT", -19, 0)
 
@@ -246,15 +248,14 @@ local grads = setmetatable({
 	[4] = {1,0,1,0.75, 1,0,1,0}, -- purple
 	[7] = {1,.75,.5,0.75, 1,.75,.5,0}, -- heirloom
 }, {__index = function(t,i) t[i] = default_grad return default_grad end})
-local RECIPE = select(7, GetAuctionItemClasses())
+local _, _, _, _, _, _, RECIPE = GetAuctionItemClasses()
 local quality_colors = setmetatable({}, {__index = function() return "|cffffffff" end})
 for i=1,7 do quality_colors[i] = select(4, GetItemQualityColor(i)) end
 
-local ShowMerchantItem = function (r, i)
+local function ShowMerchantItem(row, i)
 	local name, itemTexture, itemPrice, itemStackCount, numAvailable, isUsable, extendedCost = GetMerchantItemInfo(i)
 	local link = GetMerchantItemLink(i)
 	local color = quality_colors.default
-	local row = rows[r]
 	row.backdrop:Hide()
 	if link then
 		local name, link2, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(link)
@@ -297,31 +298,31 @@ local ShowMerchantItem = function (r, i)
 	if isUsable then row.icon:SetVertexColor(1, 1, 1) else row.icon:SetVertexColor(.9, 0, 0) end
 	row:SetID(i)
 	row:Show()
-	row:SetPoint("TOP", r == 1 and GVS or rows[r-1], r == 1 and "TOP" or "BOTTOM")
 end
+
 
 local scrollbar = LibStub("tekKonfig-Scroll").new(GVS, 0, SCROLLSTEP)
 local offset = 0
 local searchstring
 local function Refresh()
 	local n = GetMerchantNumItems()
-	local r = 1
-	local v = 0
+	local row, n_searchmatch = 1, 0
 	for i=1,n do
 		local link = GetMerchantItemLink(i)
 		if ItemSearch:Find(link, searchstring) then
-			if v >= offset and v < offset + NUMROWS then
-				ShowMerchantItem(r, i)
-				r = r + 1
+			if n_searchmatch >= offset and n_searchmatch < offset + NUMROWS then
+				ShowMerchantItem(rows[row], i)
+				row = row + 1
 			end
-			v = v + 1
+			n_searchmatch = n_searchmatch + 1
 		end
 	end
-	scrollbar:SetMinMaxValues(0, math.max(0, v - NUMROWS))
-	for i=r,NUMROWS do
+	scrollbar:SetMinMaxValues(0, math.max(0, n_searchmatch - NUMROWS))
+	for i=row,NUMROWS do
 		rows[i]:Hide()
 	end
 end
+
 
 local editbox = CreateFrame('EditBox', nil, GVS)
 editbox:SetAutoFocus(false)

@@ -1,0 +1,15 @@
+LibItemSearch
+	An item text search engine of some sort
+
+Grammar:
+	<search> 			:=	<intersect search>
+	<intersect search> 	:=	<union search> & <union search> ; <union search>
+	<union search>		:=	<negatable search>  | <negatable search> ; <negatable search>
+	<negatable search> 	:=	!<primitive search> ; <primitive search>
+	<primitive search>	:=	<tooltip search> ; <quality search> ; <type search> ; <text search>
+	<tooltip search>	:=  bop ; boa ; bou ; boe ; quest
+	<quality search>	:=	q<op><text> ; q<op><digit>
+	<ilvl search>		:=	ilvl<op><number>
+	<type search>		:=	t:<text>
+	<text search>		:=	<text>
+	<op>				:=  : | = | == | != | ~= | < | > | <= | >=
