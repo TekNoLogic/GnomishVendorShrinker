@@ -168,7 +168,7 @@ local rows = {}
 for i=1,NUMROWS do
 	local row = CreateFrame('Button', nil, GVS) -- base frame
 	row:SetHeight(ROWHEIGHT)
-	row:SetPoint("TOP", r == 1 and GVS or rows[r-1], r == 1 and "TOP" or "BOTTOM")
+	row:SetPoint("TOP", i == 1 and GVS or rows[i-1], i == 1 and "TOP" or "BOTTOM")
 	row:SetPoint("LEFT")
 	row:SetPoint("RIGHT", -19, 0)
 
