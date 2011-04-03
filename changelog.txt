@@ -1,3 +1,6 @@
+4.0.0.10-Beta
+    Some people don't even know what honor points are
+
 4.0.0.9-Beta
     Make price text red if we can't afford an item
 
