@@ -1,3 +1,6 @@
+4.1.0.11-Beta
+    Stable release
+
 4.0.0.10-Beta
     Some people don't even know what honor points are
 
