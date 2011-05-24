@@ -7,9 +7,11 @@
 ## X-Website: http://www.tekkub.net/
 ## X-Email: tekkub-wow@googlegroups.com
 ## X-Category: Misc
+## X-Icon: Interface\Icons\INV_Misc_Toy_07
 
 ## LoadManagers: AddonLoader
 ## X-LoadOn-Merchant: true
+## X-LoadOn-InterfaceOptions: GnomishVendorShrinker
 
 tekFunks\gsc.lua
 tekKonfig\tekKonfig.xml
