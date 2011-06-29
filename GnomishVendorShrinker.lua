@@ -249,7 +249,7 @@ local grads = setmetatable({
 }, {__index = function(t,i) t[i] = default_grad return default_grad end})
 local _, _, _, _, _, _, RECIPE = GetAuctionItemClasses()
 local quality_colors = setmetatable({}, {__index = function() return "|cffffffff" end})
-for i=1,7 do quality_colors[i] = select(4, GetItemQualityColor(i)) end
+for i=1,7 do quality_colors[i] = "|c".. select(4, GetItemQualityColor(i)) end
 local offset = 0
 local searchstring
 local function Refresh()
