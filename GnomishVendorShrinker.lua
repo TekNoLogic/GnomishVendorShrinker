@@ -103,7 +103,7 @@ local function SetValue(self, text, icon, link)
 	local id = link and link:match("item:(%d+)")
 	self.link, self.index, self.itemIndex = nil
 	if id then self.link = link end
-	if id and GetItemCount(id) < text or link and not id and GetCurencyCount(link) < text then
+	if id and (GetItemCount(id) or 0) < text or link and not id and (GetCurencyCount(link) or 0) < text then
 		color = "|cffff9999"
 	end
 	self.text:SetText(color..text)
@@ -250,7 +250,7 @@ local grads = setmetatable({
 }, {__index = function(t,i) t[i] = default_grad return default_grad end})
 local _, _, _, _, _, _, RECIPE = GetAuctionItemClasses()
 local quality_colors = setmetatable({}, {__index = function() return "|cffffffff" end})
-for i=1,7 do quality_colors[i] = select(4, GetItemQualityColor(i)) end
+for i=1,7 do quality_colors[i] = "|c".. select(4, GetItemQualityColor(i)) end
 
 local function ShowMerchantItem(row, i)
 	local name, itemTexture, itemPrice, itemStackCount, numAvailable, isUsable, extendedCost = GetMerchantItemInfo(i)
