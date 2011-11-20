@@ -1,7 +1,8 @@
 
-local ItemSearch = LibStub('LibItemSearch-1.0')
 local myname, ns = ...
 ns.IHASCAT = select(4, GetBuildInfo()) >= 40000
+
+local ItemSearch = LibStub('LibItemSearch-1.0')
 
 local NUMROWS, ICONSIZE, GAP, SCROLLSTEP = 14, 17, 4, 5
 local HONOR_POINTS, ARENA_POINTS = "|cffffffff|Hitem:43308:0:0:0:0:0:0:0:0|h[Honor Points]|h|r", "|cffffffff|Hitem:43307:0:0:0:0:0:0:0:0|h[Arena Points]|h|r"
@@ -372,6 +373,18 @@ end)
 editbox:SetScript("OnShow", function(self)
 	self:SetText("Search...")
 	self:SetTextColor(0.75, 0.75, 0.75, 1)
+end)
+editbox:SetScript("OnEnter", function(self)
+	GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+	GameTooltip:AddLine("Enter an item name to search")
+	GameTooltip:AddLine(" ")
+	GameTooltip:AddDoubleLine("Type search:", "bop, boe, bou, boa, quest", nil,nil,nil, 255,255,255)
+	GameTooltip:AddDoubleLine(" ", "q=rare, q<4, ilvl>=359, t:shield", 255,255,255, 255,255,255)
+	GameTooltip:AddLine("& - Match both   | - Match either   ! - Do not match", 255,255,255)
+	GameTooltip:Show()
+end)
+editbox:SetScript("OnLeave", function(self)
+	GameTooltip:Hide()
 end)
 
 local f = scrollbar:GetScript("OnValueChanged")
