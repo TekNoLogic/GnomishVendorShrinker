@@ -1,0 +1,7 @@
+## Interface: 40000
+## Title: LibItemSearch
+## Notes: An item search library
+## Author: Tuller
+## LoadOnDemand: 1
+LibStub.lua
+LibItemSearch-1.0.lua
