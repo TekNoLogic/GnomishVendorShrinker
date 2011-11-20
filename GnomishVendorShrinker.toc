@@ -15,7 +15,7 @@
 
 tekFunks\gsc.lua
 tekKonfig\tekKonfig.xml
-libs\LibItemSearch-1.0\LibItemSearch-1.0.lua
+LibItemSearch-1.0.lua
 
 KnownScanner.lua
 GnomishVendorShrinker.lua
