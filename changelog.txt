@@ -1,3 +1,9 @@
+4.3.0.13-Beta
+    New search (Thanks Urth)
+    Move the search box, it overlaps the default UI in some cases
+    Add a tooltip so people know how to use the search
+    redo it the right way
+
 4.2.0.12-Beta
     Fix *~crazy~* hex color stings
 
