@@ -17,7 +17,7 @@ end
 local GVS = CreateFrame("frame", nil, MerchantFrame)
 GVS:SetWidth(315)
 GVS:SetHeight(294)
-GVS:SetPoint("TOPLEFT", 21, -77)
+GVS:SetPoint("TOPLEFT", 8, -67)
 GVS:SetScript("OnEvent", function(self, event, ...) if self[event] then return self[event](self, event, ...) end end)
 GVS:Hide()
 
@@ -327,8 +327,8 @@ end
 
 local editbox = CreateFrame('EditBox', nil, GVS)
 editbox:SetAutoFocus(false)
-editbox:SetPoint("BOTTOMLEFT", GVS, "TOPLEFT", 65, 3)
-editbox:SetWidth(240)
+editbox:SetPoint("BOTTOMLEFT", GVS, "TOPLEFT", 55, 9)
+editbox:SetWidth(105)
 editbox:SetHeight(32)
 editbox:SetFontObject('GameFontHighlightSmall')
 
@@ -414,7 +414,7 @@ GVS:SetScript("OnHide", function() if StackSplitFrame:IsVisible() then StackSpli
 
 -- Reanchor the buyback button, it acts weird when switching tabs otherwise...
 MerchantBuyBackItem:ClearAllPoints()
-MerchantBuyBackItem:SetPoint("BOTTOMLEFT", 189, 90)
+MerchantBuyBackItem:SetPoint("BOTTOMRIGHT", -7, 33)
 
 
 local function Show()
