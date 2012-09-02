@@ -1,3 +1,6 @@
+5.0.1.14-Beta
+    Fix frame positions for PANDAS!
+
 4.3.0.13-Beta
     New search (Thanks Urth)
     Move the search box, it overlaps the default UI in some cases
