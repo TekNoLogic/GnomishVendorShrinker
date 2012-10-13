@@ -1,3 +1,6 @@
+5.0.1.15-Release
+    Tagging stable version
+
 5.0.1.14-Beta
     Fix frame positions for PANDAS!
 
