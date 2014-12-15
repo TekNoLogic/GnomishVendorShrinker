@@ -1,11 +1,10 @@
 
 local myname, ns = ...
-ns.IHASCAT = select(4, GetBuildInfo()) >= 40000
+
 
 local ItemSearch = LibStub('LibItemSearch-1.0')
 
 local NUMROWS, ICONSIZE, GAP, SCROLLSTEP = 14, 17, 4, 5
-local HONOR_POINTS, ARENA_POINTS = "|cffffffff|Hitem:43308:0:0:0:0:0:0:0:0|h[Honor Points]|h|r", "|cffffffff|Hitem:43307:0:0:0:0:0:0:0:0|h[Arena Points]|h|r"
 
 
 for _,f in pairs{MerchantNextPageButton, MerchantPrevPageButton, MerchantPageText} do
@@ -141,23 +140,11 @@ end
 
 local function AddAltCurrency(frame, i)
 	local lastframe = frame.ItemPrice
-	local honorPoints, arenaPoints, itemCount = GetMerchantItemCostInfo(i)
-	if ns.IHASCAT then itemCount, honorPoints, arenaPoints = honorPoints, 0, 0 end
-	for j=itemCount,1,-1 do
+	for j=GetMerchantItemCostInfo(i),1,-1 do
 		local f = frame:GetAltCurrencyFrame()
 		local texture, price, link, name = GetMerchantItemCostItem(i, j)
 		f:SetValue(price, texture, link or name)
 		f.index, f.itemIndex, f.link = i, j
-		lastframe = f.text
-	end
-	if arenaPoints > 0 then
-		local f = frame:GetAltCurrencyFrame()
-		f:SetValue(arenaPoints, "Interface\\PVPFrame\\PVP-ArenaPoints-Icon", ARENA_POINTS)
-		lastframe = f.text
-	end
-	if honorPoints > 0 then
-		local f = frame:GetAltCurrencyFrame()
-		f:SetValue(honorPoints, "Interface\\PVPFrame\\PVP-Currency-".. UnitFactionGroup("player"), HONOR_POINTS)
 		lastframe = f.text
 	end
 	frame.ItemName:SetPoint("RIGHT", lastframe, "LEFT", -GAP, 0)
