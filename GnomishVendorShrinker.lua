@@ -238,7 +238,7 @@ local grads = setmetatable({
 }, {__index = function(t,i) t[i] = default_grad return default_grad end})
 local _, _, _, _, _, _, RECIPE = GetAuctionItemClasses()
 local quality_colors = setmetatable({}, {__index = function() return "|cffffffff" end})
-for i=1,7 do quality_colors[i] = "|c".. select(4, GetItemQualityColor(i)) end
+for i=0,7 do quality_colors[i] = "|c".. select(4, GetItemQualityColor(i)) end
 
 local function ShowMerchantItem(row, i)
 	local name, itemTexture, itemPrice, itemStackCount, numAvailable, isUsable, extendedCost = GetMerchantItemInfo(i)
@@ -249,9 +249,13 @@ local function ShowMerchantItem(row, i)
 		local name, link2, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(link)
 		color = quality_colors[quality]
 
-		if class == RECIPE and not ns.knowns[link] then
-			row.backdrop:SetGradientAlpha("HORIZONTAL", unpack(grads[quality]))
-			row.backdrop:Show()
+		if class == RECIPE then
+			if ns.knowns[link] then
+				color = quality_colors[0]
+			else
+				row.backdrop:SetGradientAlpha("HORIZONTAL", unpack(grads[quality]))
+				row.backdrop:Show()
+			end
 		end
 	end
 
