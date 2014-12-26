@@ -237,6 +237,7 @@ local grads = setmetatable({
 	[7] = {1,.75,.5,0.75, 1,.75,.5,0}, -- heirloom
 }, {__index = function(t,i) t[i] = default_grad return default_grad end})
 local _, _, _, _, _, _, RECIPE = GetAuctionItemClasses()
+local GARRISON_ICON = "inv_garrison_blueprints%d%.blp"
 local quality_colors = setmetatable({}, {__index = function() return "|cffffffff" end})
 for i=0,7 do quality_colors[i] = "|c".. select(4, GetItemQualityColor(i)) end
 
@@ -249,7 +250,7 @@ local function ShowMerchantItem(row, i)
 		local name, link2, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(link)
 		color = quality_colors[quality]
 
-		if class == RECIPE then
+		if class == RECIPE or texture:lower():match(GARRISON_ICON) then
 			if ns.knowns[link] then
 				color = quality_colors[0]
 			else
