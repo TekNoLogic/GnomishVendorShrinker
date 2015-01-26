@@ -13,6 +13,9 @@
 ## X-LoadOn-Merchant: true
 ## X-LoadOn-InterfaceOptions: GnomishVendorShrinker
 
+externals\itemid.lua
+externals\ptr.lua
+
 tekFunks\gsc.lua
 tekKonfig\tekKonfig.xml
 LibItemSearch-1.0.lua

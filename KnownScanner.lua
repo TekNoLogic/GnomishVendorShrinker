@@ -11,6 +11,16 @@ for i=1,40 do
 end
 
 ns.knowns = setmetatable({}, {__index = function(t, i)
+	if ns.is_six_one then
+		local id = ns.ids[i]
+		if not id then return end
+
+		if C_Heirloom.IsItemHeirloom(id) and C_Heirloom.PlayerHasHeirloom(id) then
+			t[i] = true
+			return true
+		end
+	end
+
 	tip:ClearLines()
 	if not tip:IsOwned(WorldFrame) then tip:SetOwner(WorldFrame, "ANCHOR_NONE") end
 	tip:SetHyperlink(i)

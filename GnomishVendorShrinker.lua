@@ -246,23 +246,27 @@ local function ShowMerchantItem(row, i)
 	local link = GetMerchantItemLink(i)
 	local color = quality_colors.default
 	row.backdrop:Hide()
+
+	if not isUsable then
+		row.backdrop:SetGradientAlpha("HORIZONTAL", unpack(grads.red))
+		row.backdrop:Show()
+	end
+
 	if link then
 		local name, link2, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(link)
+		local id = ns.ids[link]
+		local is_heirloom = ns.is_six_one and C_Heirloom.IsItemHeirloom(id)
 		color = quality_colors[quality]
 
-		if class == RECIPE or texture:lower():match(GARRISON_ICON) then
+		if is_heirloom or class == RECIPE or texture:lower():match(GARRISON_ICON) then
 			if ns.knowns[link] then
 				color = quality_colors[0]
+				row.backdrop:Hide()
 			else
 				row.backdrop:SetGradientAlpha("HORIZONTAL", unpack(grads[quality]))
 				row.backdrop:Show()
 			end
 		end
-	end
-
-	if not isUsable then
-		row.backdrop:SetGradientAlpha("HORIZONTAL", unpack(grads.red))
-		row.backdrop:Show()
 	end
 
 	row.icon:SetTexture(itemTexture)
