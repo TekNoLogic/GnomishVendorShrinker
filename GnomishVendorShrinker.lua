@@ -103,7 +103,7 @@ local function SetValue(self, text, icon, link)
 	local id = link and link:match("item:(%d+)")
 	self.link, self.index, self.itemIndex = nil
 	if id then self.link = link end
-	if id and (GetItemCount(id) or 0) < text or link and not id and (GetCurencyCount(link) or 0) < text then
+	if id and (GetItemCount(id, true) or 0) < text or link and not id and (GetCurencyCount(link) or 0) < text then
 		color = "|cffff9999"
 	end
 	self.text:SetText(color..text)
