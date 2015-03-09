@@ -319,6 +319,9 @@ local function Refresh()
 		rows[i]:Hide()
 	end
 end
+GVS.CURRENCY_DISPLAY_UPDATE = Refresh
+GVS.BAG_UPDATE = Refresh
+GVS.MERCHANT_UPDATE = Refresh
 
 
 local editbox = CreateFrame('EditBox', nil, GVS)
@@ -404,8 +407,17 @@ GVS:SetScript("OnShow", function(self, noreset)
 	scrollbar:SetMinMaxValues(0, max)
 	scrollbar:SetValue(noreset and math.min(scrollbar:GetValue(), max) or 0)
 	Refresh()
+
+	GVS:RegisterEvent("BAG_UPDATE")
+	GVS:RegisterEvent("MERCHANT_UPDATE")
+	GVS:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 end)
-GVS:SetScript("OnHide", function() if StackSplitFrame:IsVisible() then StackSplitFrame:Hide() end end)
+GVS:SetScript("OnHide", function()
+	GVS:UnregisterEvent("BAG_UPDATE")
+	GVS:UnregisterEvent("MERCHANT_UPDATE")
+	GVS:UnregisterEvent("CURRENCY_DISPLAY_UPDATE")
+	if StackSplitFrame:IsVisible() then StackSplitFrame:Hide() end
+end)
 
 
 -- Reanchor the buyback button, it acts weird when switching tabs otherwise...
