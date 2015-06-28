@@ -258,7 +258,7 @@ local function ShowMerchantItem(row, i)
 		local is_heirloom = ns.is_six_one and C_Heirloom.IsItemHeirloom(id)
 		color = quality_colors[quality]
 
-		if is_heirloom or class == RECIPE or texture:lower():match(GARRISON_ICON) then
+		if is_heirloom or class == RECIPE or texture and texture:lower():match(GARRISON_ICON) then
 			if ns.knowns[link] then
 				color = quality_colors[0]
 				row.backdrop:Hide()
