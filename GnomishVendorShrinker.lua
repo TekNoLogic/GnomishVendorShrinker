@@ -236,8 +236,8 @@ local grads = setmetatable({
 	[4] = {1,0,1,0.75, 1,0,1,0}, -- purple
 	[7] = {1,.75,.5,0.75, 1,.75,.5,0}, -- heirloom
 }, {__index = function(t,i) t[i] = default_grad return default_grad end})
-local _, _, _, _, _, _, RECIPE = GetAuctionItemClasses()
-local GARRISON_ICON = "inv_garrison_blueprints%d%.blp"
+local RECIPE = GetItemClassInfo(LE_ITEM_CLASS_RECIPE)
+local GARRISON_ICON = {[1001489] = true, [1001490] = true, [1001491] = true}
 local quality_colors = setmetatable({}, {__index = function() return "|cffffffff" end})
 for i=0,7 do quality_colors[i] = "|c".. select(4, GetItemQualityColor(i)) end
 
@@ -258,7 +258,7 @@ local function ShowMerchantItem(row, i)
 		local is_heirloom = ns.is_six_one and C_Heirloom.IsItemHeirloom(id)
 		color = quality_colors[quality]
 
-		if is_heirloom or class == RECIPE or texture:lower():match(GARRISON_ICON) then
+		if is_heirloom or class == RECIPE or GARRISON_ICON[texture] then
 			if ns.knowns[link] then
 				color = quality_colors[0]
 				row.backdrop:Hide()
