@@ -1,60 +1,84 @@
-6.0.0.17-Beta
-    Make grey out work for garrison blueprints
+### 7.0.0.18-Beta
 
-6.0.0.16-Beta
-    Make known recipes grey
+* Fix for Legion API changes (thanks Talyrius)
+* Refresh the list more often to catch spent currency
+* Check bank items now
+* Grey out known heirlooms on 6.1
 
-5.0.1.15-Release
-    Tagging stable version
+### 6.0.0.17-Beta
 
-5.0.1.14-Beta
-    Fix frame positions for PANDAS!
+* Make grey out work for garrison blueprints
 
-4.3.0.13-Beta
-    New search (Thanks Urth)
-    Move the search box, it overlaps the default UI in some cases
-    Add a tooltip so people know how to use the search
-    redo it the right way
+### 6.0.0.16-Beta
 
-4.2.0.12-Beta
-    Fix *~crazy~* hex color stings
+* Make known recipes grey
 
-4.1.0.11-Release
-    Tagging stable version
+### 5.0.1.15-Release
 
-4.0.0.10-Beta
-    Some people don't even know what honor points are
+* Tagging stable version
 
-4.0.0.9-Beta
-    Make price text red if we can't afford an item
+### 5.0.1.14-Beta
 
-4.0.0.8-Beta
-    Fix known recipe highlight
+* Fix frame positions for PANDAS!
 
-4.0.0.7-Beta
-    Helps to register for drag.
-    Stack-sold items changed with 4.0
+### 4.3.0.13-Beta
 
-3.3.0.6-Beta
-    Better recipe highlighting
+* New search (Thanks Urth)
+* Move the search box, it overlaps the default UI in some cases
+* Add a tooltip so people know how to use the search
+* redo it the right way
 
-3.3.0.5-Beta
-    Fix refresh "issue"?
-    Oops, I always forget to register all clicks... stupid bad blizzy defaults
+### 4.2.0.12-Beta
 
-3.2.0.4-Beta
-    Increase number of lines in tip scanner
+* Fix *~crazy~* hex color stings
 
-3.2.0.3-Beta
-    Switch to actual honor/arena point itemIDs so we get better tooltips
-    Stupid nils
-    Hide splitstack onhide
-    Fix gold and token items anchoring
+### 4.1.0.11-Release
 
-3.2.0.2-Beta
-    Add splitstack frame, without the retarded max purchase limits the default vendor frame uses
-    Ensure we always have a default item quality color
-    Fix copper color
+* Tagging stable version
 
-3.2.0.1-Beta
-    And so it begins...
+### 4.0.0.10-Beta
+
+* Some people don't even know what honor points are
+
+### 4.0.0.9-Beta
+
+* Make price text red if we can't afford an item
+
+### 4.0.0.8-Beta
+
+* Fix known recipe highlight
+
+### 4.0.0.7-Beta
+
+* Helps to register for drag.
+* Stack-sold items changed with 4.0
+
+### 3.3.0.6-Beta
+
+* Better recipe highlighting
+
+### 3.3.0.5-Beta
+
+* Fix refresh "issue"?
+* Oops, I always forget to register all clicks... stupid bad blizzy defaults
+
+### 3.2.0.4-Beta
+
+* Increase number of lines in tip scanner
+
+### 3.2.0.3-Beta
+
+* Switch to actual honor/arena point itemIDs so we get better tooltips
+* Stupid nils
+* Hide splitstack onhide
+* Fix gold and token items anchoring
+
+### 3.2.0.2-Beta
+
+* Add splitstack frame, without the retarded max purchase limits the default vendor frame uses
+* Ensure we always have a default item quality color
+* Fix copper color
+
+### 3.2.0.1-Beta
+
+* And so it begins...
