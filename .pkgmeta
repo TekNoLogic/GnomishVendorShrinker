@@ -1,0 +1,3 @@
+manual-changelog:
+    filename: changelog.txt
+    markup-type: markdown
