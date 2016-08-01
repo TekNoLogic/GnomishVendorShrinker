@@ -1,2 +1,0 @@
-itemid.lua
-ptr.lua
