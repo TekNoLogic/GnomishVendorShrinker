@@ -1,3 +1,7 @@
+### 7.0.0.19-Beta
+
+* Bump to fix botched releases on WoWI and Wowace
+
 ### 7.0.0.18-Beta
 
 * Fix for Legion API changes (thanks Talyrius)
