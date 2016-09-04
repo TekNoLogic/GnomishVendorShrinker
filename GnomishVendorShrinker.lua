@@ -227,6 +227,19 @@ for i=1,NUMROWS do
 end
 
 
+local RECIPE = GetItemClassInfo(LE_ITEM_CLASS_RECIPE)
+local MISC = GetItemClassInfo(LE_ITEM_CLASS_MISCELLANEOUS)
+local GARRISON_ICON = {[1001489] = true, [1001490] = true, [1001491] = true}
+local function Knowable(link)
+	local name, link2, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(link)
+	local id = ns.ids[link]
+
+	if C_Heirloom.IsItemHeirloom(id) then return true end
+	if class == MISC and select(2, C_ToyBox.GetToyInfo(id)) then return true end
+	if class == RECIPE or GARRISON_ICON[texture] then return true end
+end
+
+
 local default_grad = {0,1,0,0.75, 0,1,0,0} -- green
 local grads = setmetatable({
 	red = {1,0,0,0.75, 1,0,0,0},
@@ -236,8 +249,6 @@ local grads = setmetatable({
 	[4] = {1,0,1,0.75, 1,0,1,0}, -- purple
 	[7] = {1,.75,.5,0.75, 1,.75,.5,0}, -- heirloom
 }, {__index = function(t,i) t[i] = default_grad return default_grad end})
-local RECIPE = GetItemClassInfo(LE_ITEM_CLASS_RECIPE)
-local GARRISON_ICON = {[1001489] = true, [1001490] = true, [1001491] = true}
 local quality_colors = setmetatable({}, {__index = function() return "|cffffffff" end})
 for i=0,7 do quality_colors[i] = "|c".. select(4, GetItemQualityColor(i)) end
 
@@ -255,10 +266,10 @@ local function ShowMerchantItem(row, i)
 	if link then
 		local name, link2, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(link)
 		local id = ns.ids[link]
-		local is_heirloom = ns.is_six_one and C_Heirloom.IsItemHeirloom(id)
+		local is_heirloom = C_Heirloom.IsItemHeirloom(id)
 		color = quality_colors[quality]
 
-		if is_heirloom or class == RECIPE or GARRISON_ICON[texture] then
+		if Knowable(link) then
 			if ns.knowns[link] then
 				color = quality_colors[0]
 				row.backdrop:Hide()
