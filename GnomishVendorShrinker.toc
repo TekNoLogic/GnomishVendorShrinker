@@ -11,7 +11,7 @@
 ## X-LoadOn-InterfaceOptions: GnomishVendorShrinker
 
 externals\itemid.lua
-externals\ptr.lua
+externals\tooltip_scanner.lua
 
 tekFunks\gsc.lua
 tekKonfig\tekKonfig.xml
