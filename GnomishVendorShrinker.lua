@@ -240,6 +240,13 @@ local function Knowable(link)
 end
 
 
+local function RecipeNeedsRank(link)
+	local _, _, _, _, _, class = GetItemInfo(link)
+	if class ~= RECIPE then return end
+	return ns.unmet_requirements[link]
+end
+
+
 local default_grad = {0,1,0,0.75, 0,1,0,0} -- green
 local grads = setmetatable({
 	red = {1,0,0,0.75, 1,0,0,0},
@@ -273,6 +280,9 @@ local function ShowMerchantItem(row, i)
 			if ns.knowns[link] then
 				color = quality_colors[0]
 				row.backdrop:Hide()
+			elseif RecipeNeedsRank(link) then
+				row.backdrop:SetGradientAlpha("HORIZONTAL", unpack(grads.red))
+				row.backdrop:Show()
 			else
 				row.backdrop:SetGradientAlpha("HORIZONTAL", unpack(grads[quality]))
 				row.backdrop:Show()
