@@ -77,63 +77,15 @@ local function PopoutSplitStack(self, qty)
 end
 
 
-local function OnEnter(self)
-	GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-	if self.link then GameTooltip:SetHyperlink(self.link) else GameTooltip:SetMerchantCostItem(self.index, self.itemIndex) end
-end
-
-
-local function OnLeave()
-	GameTooltip:Hide()
-	ResetCursor()
-end
-
-
-local function GetCurencyCount(item)
-	for i=1,GetCurrencyListSize() do
-		local name, _, _, _, _, count = GetCurrencyListInfo(i)
-		if item == name then return count end
-	end
-end
-
-
-local function SetValue(self, text, icon, link)
-	local color = ""
-	local id = link and link:match("item:(%d+)")
-	self.link, self.index, self.itemIndex = nil
-	if id then self.link = link end
-	if id and (GetItemCount(id, true) or 0) < text or link and not id and (GetCurencyCount(link) or 0) < text then
-		color = "|cffff9999"
-	end
-	self.text:SetText(color..text)
-	self.icon:SetTexture(icon)
-	self:Show()
-end
-
-
 local function GetAltCurrencyFrame(frame)
 	for i,v in ipairs(frame.altframes) do if not v:IsShown() then return v end end
 
-	local anchor = #frame.altframes > 0 and frame.altframes[#frame.altframes].text
-	local f = CreateFrame('Frame', nil, frame)
-	f:SetWidth(ICONSIZE) f:SetHeight(ICONSIZE)
-	f:SetPoint("RIGHT", anchor or frame.ItemPrice, "LEFT")
+	local anchor = #frame.altframes > 0 and frame.altframes[#frame.altframes]
+	local item = ns.NewAltCurrencyItemFrame(frame)
+	item:SetPoint("RIGHT", anchor or frame.ItemPrice, "LEFT")
 
-	f.icon = f:CreateTexture()
-	f.icon:SetWidth(ICONSIZE) f.icon:SetHeight(ICONSIZE)
-	f.icon:SetPoint("RIGHT")
-
-	f.text = f:CreateFontString(nil, nil, "NumberFontNormalSmall")
-	f.text:SetPoint("RIGHT", f.icon, "LEFT", -GAP/2, 0)
-
-	f.SetValue = SetValue
-
-	f:EnableMouse(true)
-	f:SetScript("OnEnter", OnEnter)
-	f:SetScript("OnLeave", OnLeave)
-
-	table.insert(frame.altframes, f)
-	return f
+	table.insert(frame.altframes, item)
+	return item
 end
 
 
@@ -142,9 +94,8 @@ local function AddAltCurrency(frame, i)
 	for j=GetMerchantItemCostInfo(i),1,-1 do
 		local f = frame:GetAltCurrencyFrame()
 		local texture, price, link, name = GetMerchantItemCostItem(i, j)
-		f:SetValue(price, texture, link or name)
-		f.index, f.itemIndex, f.link = i, j
-		lastframe = f.text
+		f:SetValue(i, j)
+		lastframe = f
 	end
 	frame.ItemName:SetPoint("RIGHT", lastframe, "LEFT", -GAP, 0)
 end

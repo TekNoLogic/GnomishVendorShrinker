@@ -17,6 +17,8 @@ tekFunks\gsc.lua
 tekKonfig\tekKonfig.xml
 LibItemSearch-1.0.lua
 
+AltCurrencyItem.lua
 RowShader.lua
+
 KnownScanner.lua
 GnomishVendorShrinker.lua
