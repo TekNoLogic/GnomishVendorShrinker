@@ -43,7 +43,6 @@ local function PopoutOnClick(self, button)
 	local _, _, _, _, _, _, _, itemStackSize = GetItemInfo(link)
 
 	local size = numAvailable > 0 and numAvailable or itemStackSize
-	-- OpenStackSplitFrame(size, self, "LEFT", "RIGHT")
 	OpenStackSplitFrame(250, self, "LEFT", "RIGHT")
 end
 
@@ -227,71 +226,18 @@ for i=1,NUMROWS do
 end
 
 
-local RECIPE = GetItemClassInfo(LE_ITEM_CLASS_RECIPE)
-local MISC = GetItemClassInfo(LE_ITEM_CLASS_MISCELLANEOUS)
-local GARRISON_ICON = {[1001489] = true, [1001490] = true, [1001491] = true}
-local function Knowable(link)
-	local name, link2, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(link)
-	local id = ns.ids[link]
-
-	if C_Heirloom.IsItemHeirloom(id) then return true end
-	if class == MISC and select(2, C_ToyBox.GetToyInfo(id)) then return true end
-	if class == RECIPE or GARRISON_ICON[texture] then return true end
-end
-
-
-local function RecipeNeedsRank(link)
-	local _, _, _, _, _, class = GetItemInfo(link)
-	if class ~= RECIPE then return end
-	return ns.unmet_requirements[link]
-end
-
-
-local default_grad = {0,1,0,0.75, 0,1,0,0} -- green
-local grads = setmetatable({
-	red = {1,0,0,0.75, 1,0,0,0},
-	[1] = {1,1,1,0.75, 1,1,1,0}, -- white
-	[2] = default_grad, -- green
-	[3] = {0.5,0.5,1,1, 0,0,1,0}, -- blue
-	[4] = {1,0,1,0.75, 1,0,1,0}, -- purple
-	[7] = {1,.75,.5,0.75, 1,.75,.5,0}, -- heirloom
-}, {__index = function(t,i) t[i] = default_grad return default_grad end})
-local quality_colors = setmetatable({}, {__index = function() return "|cffffffff" end})
-for i=0,7 do quality_colors[i] = "|c".. select(4, GetItemQualityColor(i)) end
-
 local function ShowMerchantItem(row, i)
 	local name, itemTexture, itemPrice, itemStackCount, numAvailable, isUsable, extendedCost = GetMerchantItemInfo(i)
 	local link = GetMerchantItemLink(i)
-	local color = quality_colors.default
-	row.backdrop:Hide()
 
-	if not isUsable then
-		row.backdrop:SetGradientAlpha("HORIZONTAL", unpack(grads.red))
-		row.backdrop:Show()
-	end
-
-	if link then
-		local name, link2, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(link)
-		local id = ns.ids[link]
-		local is_heirloom = C_Heirloom.IsItemHeirloom(id)
-		color = quality_colors[quality]
-
-		if Knowable(link) then
-			if ns.knowns[link] then
-				color = quality_colors[0]
-				row.backdrop:Hide()
-			elseif RecipeNeedsRank(link) then
-				row.backdrop:SetGradientAlpha("HORIZONTAL", unpack(grads.red))
-				row.backdrop:Show()
-			else
-				row.backdrop:SetGradientAlpha("HORIZONTAL", unpack(grads[quality]))
-				row.backdrop:Show()
-			end
-		end
-	end
+	local gradient, shown = ns.GetRowGradient(i)
+	row.backdrop:SetGradientAlpha("HORIZONTAL", unpack(gradient))
+	row.backdrop:SetShown(shown)
 
 	row.icon:SetTexture(itemTexture)
-	row.ItemName:SetText((numAvailable > -1 and ("["..numAvailable.."] ") or "").. color.. (name or "<Loading item data>").. (itemStackCount > 1 and ("|r x"..itemStackCount) or ""))
+
+	local textcolor = ns.GetRowTextColor(i)
+	row.ItemName:SetText((numAvailable > -1 and ("["..numAvailable.."] ") or "").. textcolor.. (name or "<Loading item data>").. (itemStackCount > 1 and ("|r x"..itemStackCount) or ""))
 
 	for i,v in pairs(row.altframes) do v:Hide() end
 	row.altcurrency = extendedCost
@@ -313,7 +259,8 @@ local function ShowMerchantItem(row, i)
 		row.extendedCost = nil
 	end
 
-	if isUsable then row.icon:SetVertexColor(1, 1, 1) else row.icon:SetVertexColor(.9, 0, 0) end
+	row.icon:SetVertexColor(ns.GetRowVertexColor(i))
+
 	row:SetID(i)
 	row:Show()
 end
