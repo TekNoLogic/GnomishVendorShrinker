@@ -4,6 +4,7 @@ local myname, ns = ...
 
 function ns.MakeSearchField(GVS, Refresh)
   local editbox = ns.NewTextInput(GVS)
+  editbox:SetPoint("BOTTOMLEFT", GVS, "TOPLEFT", 55, 9)
 
   editbox:SetScript("OnEditFocusGained", function(self)
   	if not GVS.searchstring then
