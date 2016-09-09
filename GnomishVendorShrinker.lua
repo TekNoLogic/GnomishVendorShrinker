@@ -195,13 +195,12 @@ end
 
 local scrollbar = LibStub("tekKonfig-Scroll").new(GVS, 0, SCROLLSTEP)
 local offset = 0
-local searchstring
 local function Refresh()
 	local n = GetMerchantNumItems()
 	local row, n_searchmatch = 1, 0
 	for i=1,n do
 		local link = GetMerchantItemLink(i)
-		if ItemSearch:Find(link, searchstring) then
+		if ItemSearch:Find(link, GVS.searchstring) then
 			if n_searchmatch >= offset and n_searchmatch < offset + NUMROWS then
 				ShowMerchantItem(rows[row], i)
 				row = row + 1
@@ -219,72 +218,8 @@ GVS.BAG_UPDATE = Refresh
 GVS.MERCHANT_UPDATE = Refresh
 
 
-local editbox = CreateFrame('EditBox', nil, GVS)
-editbox:SetAutoFocus(false)
-editbox:SetPoint("BOTTOMLEFT", GVS, "TOPLEFT", 55, 9)
-editbox:SetWidth(105)
-editbox:SetHeight(32)
-editbox:SetFontObject('GameFontHighlightSmall')
+ns.MakeSearchField(GVS, Refresh)
 
-local left = editbox:CreateTexture(nil, "BACKGROUND")
-left:SetWidth(8) left:SetHeight(20)
-left:SetPoint("LEFT", -5, 0)
-left:SetTexture("Interface\\Common\\Common-Input-Border")
-left:SetTexCoord(0, 0.0625, 0, 0.625)
-
-local right = editbox:CreateTexture(nil, "BACKGROUND")
-right:SetWidth(8) right:SetHeight(20)
-right:SetPoint("RIGHT", 0, 0)
-right:SetTexture("Interface\\Common\\Common-Input-Border")
-right:SetTexCoord(0.9375, 1, 0, 0.625)
-
-local center = editbox:CreateTexture(nil, "BACKGROUND")
-center:SetHeight(20)
-center:SetPoint("RIGHT", right, "LEFT", 0, 0)
-center:SetPoint("LEFT", left, "RIGHT", 0, 0)
-center:SetTexture("Interface\\Common\\Common-Input-Border")
-center:SetTexCoord(0.0625, 0.9375, 0, 0.625)
-
-editbox:SetScript("OnEscapePressed", editbox.ClearFocus)
-editbox:SetScript("OnEnterPressed", editbox.ClearFocus)
-editbox:SetScript("OnEditFocusGained", function(self)
-	if not searchstring then
-		self:SetText("")
-		self:SetTextColor(1,1,1,1)
-	end
-end)
-editbox:SetScript("OnEditFocusLost", function(self)
-	if self:GetText() == "" then
-		self:SetText("Search...")
-		self:SetTextColor(0.75, 0.75, 0.75, 1)
-	end
-end)
-editbox:SetScript("OnTextChanged", function(self)
-	local t = self:GetText()
-	searchstring = t ~= "" and t ~= "Search..." and t:lower() or nil
-	Refresh()
-end)
-editbox:SetScript("OnShow", function(self)
-	self:SetText("Search...")
-	self:SetTextColor(0.75, 0.75, 0.75, 1)
-end)
-editbox:SetScript("OnEnter", function(self)
-	GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
-	GameTooltip:AddLine("Enter an item name to search")
-	GameTooltip:AddLine(" ")
-	GameTooltip:AddDoubleLine("Type search:", "bop   boe   bou", nil,nil,nil, 255,255,255)
-	GameTooltip:AddDoubleLine(" ", "boa   quest", 255,255,255, 255,255,255)
-	GameTooltip:AddDoubleLine(" ", "ilvl>=378  ilvl=359", 255,255,255, 255,255,255)
-	GameTooltip:AddDoubleLine(" ", "q=rare   q<4", 255,255,255, 255,255,255)
-	GameTooltip:AddDoubleLine(" ", "t:leather   t:shield", 255,255,255, 255,255,255)
-	GameTooltip:AddDoubleLine("Modifiers:", "&   Match both", nil,nil,nil, 255,255,255)
-	GameTooltip:AddDoubleLine(" ", "|   Match either", 255,255,255, 255,255,255)
-	GameTooltip:AddDoubleLine(" ", "!   Do not match", 255,255,255, 255,255,255)
-	GameTooltip:Show()
-end)
-editbox:SetScript("OnLeave", function(self)
-	GameTooltip:Hide()
-end)
 
 local f = scrollbar:GetScript("OnValueChanged")
 scrollbar:SetScript("OnValueChanged", function(self, value, ...)
