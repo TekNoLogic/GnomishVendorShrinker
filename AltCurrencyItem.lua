@@ -49,15 +49,11 @@ local function SetValue(self, i, j)
 	texts[self]:SetText(GetTextColor(price, (link or name)).. price)
 
 	self:Show()
-
-	local _, _, width, height = self:GetBoundsRect()
-	self:SetSize(width, height)
 end
 
 
 function ns.NewAltCurrencyItemFrame(parent)
 	local frame = CreateFrame("Frame", nil, parent)
-
 	frame:SetSize(ICONSIZE, ICONSIZE)
 
 	local text = frame:CreateFontString(nil, nil, "NumberFontNormalSmall")
@@ -70,6 +66,7 @@ function ns.NewAltCurrencyItemFrame(parent)
 	icons[frame] = icon
 
 	frame.SetValue = SetValue
+	frame.SizeToFit = ns.SizeToFit
 
 	frame:EnableMouse(true)
 	frame:SetScript("OnEnter", OnEnter)

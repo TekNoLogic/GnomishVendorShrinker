@@ -22,9 +22,9 @@ GVS:Hide()
 
 
 local function OnClick(self, button)
-	if IsAltKeyDown() and not self.altcurrency then self:BuyItem(true)
+	if IsAltKeyDown() and not self.AltCurrency:IsShown() then self:BuyItem(true)
 	elseif IsModifiedClick() then HandleModifiedItemClick(GetMerchantItemLink(self:GetID()))
-	elseif self.altcurrency then
+	elseif self.AltCurrency:IsShown() then
 		local id = self:GetID()
 		local link = GetMerchantItemLink(id)
 		self.link, self.texture = GetMerchantItemLink(id), self.icon:GetTexture()
@@ -77,30 +77,6 @@ local function PopoutSplitStack(self, qty)
 end
 
 
-local function GetAltCurrencyFrame(frame)
-	for i,v in ipairs(frame.altframes) do if not v:IsShown() then return v end end
-
-	local anchor = #frame.altframes > 0 and frame.altframes[#frame.altframes]
-	local item = ns.NewAltCurrencyItemFrame(frame)
-	item:SetPoint("RIGHT", anchor or frame.ItemPrice, "LEFT")
-
-	table.insert(frame.altframes, item)
-	return item
-end
-
-
-local function AddAltCurrency(frame, i)
-	local lastframe = frame.ItemPrice
-	for j=GetMerchantItemCostInfo(i),1,-1 do
-		local f = frame:GetAltCurrencyFrame()
-		local texture, price, link, name = GetMerchantItemCostItem(i, j)
-		f:SetValue(i, j)
-		lastframe = f
-	end
-	frame.ItemName:SetPoint("RIGHT", lastframe, "LEFT", -GAP, 0)
-end
-
-
 local ROWHEIGHT = 21
 local rows = {}
 for i=1,NUMROWS do
@@ -137,11 +113,6 @@ for i=1,NUMROWS do
 	row.icon = icon:CreateTexture(nil, "BORDER")
 	row.icon:SetAllPoints()
 
-	local ItemName = row:CreateFontString(nil, nil, "GameFontNormalSmall")
-	ItemName:SetPoint('LEFT', icon, "RIGHT", GAP, 0)
-	ItemName:SetJustifyH('LEFT')
-	row.ItemName = ItemName
-
 	local popout = CreateFrame("Button", nil, row)
 	popout:SetPoint("RIGHT")
 	popout:SetWidth(ROWHEIGHT/2) popout:SetHeight(ROWHEIGHT)
@@ -157,8 +128,15 @@ for i=1,NUMROWS do
 	ItemPrice:SetPoint('RIGHT', popout, "LEFT", -2, 0)
 	row.ItemPrice = ItemPrice
 
-	row.altframes = {}
-	row.AddAltCurrency, row.GetAltCurrencyFrame = AddAltCurrency, GetAltCurrencyFrame
+	local AltCurrency = ns.NewAltCurrencyFrame(row)
+	AltCurrency:SetPoint("RIGHT", ItemPrice, "LEFT")
+	row.AltCurrency = AltCurrency
+
+	local ItemName = row:CreateFontString(nil, nil, "GameFontNormalSmall")
+	ItemName:SetPoint("LEFT", icon, "RIGHT", GAP, 0)
+	ItemName:SetPoint("RIGHT", AltCurrency, "LEFT", -GAP, 0)
+	ItemName:SetJustifyH("LEFT")
+	row.ItemName = ItemName
 
 	row:SetScript('OnEnter', function(self)
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -178,6 +156,9 @@ end
 
 
 local function ShowMerchantItem(row, i)
+	row:SetID(i)
+	row:Show()
+
 	local name, itemTexture, itemPrice, itemStackCount, numAvailable, isUsable, extendedCost = GetMerchantItemInfo(i)
 	local link = GetMerchantItemLink(i)
 
@@ -190,10 +171,9 @@ local function ShowMerchantItem(row, i)
 	local textcolor = ns.GetRowTextColor(i)
 	row.ItemName:SetText((numAvailable > -1 and ("["..numAvailable.."] ") or "").. textcolor.. (name or "<Loading item data>").. (itemStackCount > 1 and ("|r x"..itemStackCount) or ""))
 
-	for i,v in pairs(row.altframes) do v:Hide() end
-	row.altcurrency = extendedCost
+	row.AltCurrency:SetValue(i)
+
 	if extendedCost then
-		row:AddAltCurrency(i)
 		row.link, row.texture, row.extendedCost = link, itemTexture, true
 	end
 	if itemPrice > 0 then
@@ -201,19 +181,15 @@ local function ShowMerchantItem(row, i)
 		row.Price = itemPrice
 	end
 	if extendedCost and (itemPrice <= 0) then
-		row.ItemPrice:SetText()
+		row.ItemPrice:SetText("")
 		row.Price = 0
 	elseif extendedCost and (itemPrice > 0) then
 		row.ItemPrice:SetText(ns.GSC(itemPrice))
 	else
-		row.ItemName:SetPoint("RIGHT", row.ItemPrice, "LEFT", -GAP, 0)
 		row.extendedCost = nil
 	end
 
 	row.icon:SetVertexColor(ns.GetRowVertexColor(i))
-
-	row:SetID(i)
-	row:Show()
 end
 
 
