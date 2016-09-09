@@ -269,6 +269,3 @@ end)
 
 
 if MerchantFrame:IsVisible() and MerchantFrame.selectedTab == 1 then Show() end
-
-
-LibStub("tekKonfig-AboutPanel").new(nil, "GnomishVendorShrinker")
