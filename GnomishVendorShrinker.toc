@@ -21,6 +21,7 @@ LibItemSearch-1.0.lua
 
 frames\AltCurrency.lua
 frames\AltCurrencyItem.lua
+frames\MerchantItem.lua
 frames\RowShader.lua
 frames\SearchField.lua
 
