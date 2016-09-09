@@ -17,7 +17,9 @@ local GVS = CreateFrame("frame", nil, MerchantFrame)
 GVS:SetWidth(315)
 GVS:SetHeight(294)
 GVS:SetPoint("TOPLEFT", 8, -67)
-GVS:SetScript("OnEvent", function(self, event, ...) if self[event] then return self[event](self, event, ...) end end)
+GVS:SetScript("OnEvent", function(self, event, ...)
+	if self[event] then return self[event](self, event, ...) end
+end)
 GVS:Hide()
 
 
