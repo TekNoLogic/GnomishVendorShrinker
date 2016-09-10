@@ -60,6 +60,7 @@ function ns.GetRowGradient(index)
 	elseif RecipeNeedsRank(link) then
 		return GRADS.red, true
 	else
+		local _, _, quality = GetItemInfo(link)
 		return GRADS[quality], true
 	end
 end
