@@ -8,16 +8,23 @@ local ICONSIZE = 17
 
 
 local function OnClick(self, button)
-	if IsAltKeyDown() and not self.AltCurrency:IsShown() then
+	local id = self:GetID()
+	local hasaltcurrency = (GetMerchantItemCostInfo(id) > 0)
+
+	if IsAltKeyDown() and not hasaltcurrency then
 		self:BuyItem(true)
+
 	elseif IsModifiedClick() then
-		HandleModifiedItemClick(GetMerchantItemLink(self:GetID()))
-	elseif self.AltCurrency:IsShown() then
-		local id = self:GetID()
+		HandleModifiedItemClick(GetMerchantItemLink(id))
+
+	elseif hasaltcurrency then
 		local link = GetMerchantItemLink(id)
 		self.link, self.texture = GetMerchantItemLink(id), self.icon:GetTexture()
 		MerchantFrame_ConfirmExtendedItemCost(self)
-	else self:BuyItem() end
+
+	else
+		self:BuyItem() 
+	end
 end
 
 
