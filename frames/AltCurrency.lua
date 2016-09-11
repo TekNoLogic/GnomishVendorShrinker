@@ -3,7 +3,7 @@ local myname, ns = ...
 
 
 local function NewItemFrame(self, i)
-	local item = ns.NewAltCurrencyItemFrame(self.parent)
+	local item = self.NewAltCurrencyItemFrame(self.parent)
 
 	if i == 1 then
 		item:SetPoint("LEFT")
@@ -39,7 +39,11 @@ function ns.NewAltCurrencyFrame(parent)
 	local frame = CreateFrame("Frame", nil, parent)
 	frame:SetSize(1,1)
 
-	itemframesets[frame] = setmetatable({parent = frame}, MT)
+	local t = {
+		parent = frame,
+		NewAltCurrencyItemFrame = ns.NewAltCurrencyItemFrame,
+	}
+	itemframesets[frame] = setmetatable(t, MT)
 
 	frame.SetValue = SetValue
 	frame.SizeToFit = ns.SizeToFit

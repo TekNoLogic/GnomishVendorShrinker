@@ -1,3 +1,4 @@
+events.lua
 itemid.lua
 size_to_fit.lua
 tooltip_scanner.lua

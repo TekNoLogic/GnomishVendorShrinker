@@ -10,6 +10,7 @@
 ## X-LoadOn-Merchant: true
 ## X-LoadOn-InterfaceOptions: GnomishVendorShrinker
 
+externals\events.lua
 externals\itemid.lua
 externals\size_to_fit.lua
 externals\tooltip_scanner.lua
