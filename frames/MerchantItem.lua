@@ -23,33 +23,19 @@ local function OnClick(self, button)
 		MerchantFrame_ConfirmExtendedItemCost(self)
 
 	else
-		self:BuyItem() 
+		self:BuyItem()
 	end
 end
 
 
-local function PopoutOnClick(self, button)
-	local id = self:GetParent():GetID()
-	local link = GetMerchantItemLink(id)
-	if not link then return end
+function ns.Purchase(id, quantity)
+	local _, _, _, _, available = GetMerchantItemInfo(id)
+	local max = GetMerchantItemMaxStack(id)
 
-	local _, _, _, vendorStackSize, numAvailable = GetMerchantItemInfo(id)
-	local maxPurchase = GetMerchantItemMaxStack(id)
-	local _, _, _, _, _, _, _, itemStackSize = GetItemInfo(link)
-
-	local size = numAvailable > 0 and numAvailable or itemStackSize
-	OpenStackSplitFrame(250, self, "LEFT", "RIGHT")
-end
-
-
-local function Purchase(id, quantity)
-	local _, _, _, vendorStackSize, numAvailable = GetMerchantItemInfo(id)
-	local maxPurchase = GetMerchantItemMaxStack(id)
-
-	if numAvailable > 0 and numAvailable < quantity then quantity = numAvailable end
+	if available > 0 and available < quantity then quantity = available end
 	local purchased = 0
 	while purchased < quantity do
-		local buyamount = math.min(maxPurchase, quantity - purchased)
+		local buyamount = math.min(max, quantity - purchased)
 		purchased = purchased + buyamount
 		BuyMerchantItem(id, buyamount)
 	end
@@ -63,12 +49,7 @@ local function BuyItem(self, fullstack)
 
 	local _, _, _, vendorStackSize = GetMerchantItemInfo(id)
 	local _, _, _, _, _, _, _, itemStackSize = GetItemInfo(link)
-	Purchase(id, fullstack and itemStackSize or vendorStackSize or 1)
-end
-
-
-local function PopoutSplitStack(self, qty)
-	Purchase(self:GetParent():GetID(), qty)
+	ns.Purchase(id, fullstack and itemStackSize or vendorStackSize or 1)
 end
 
 
@@ -141,15 +122,9 @@ function ns.NewMerchantItemFrame(parent)
 	frame.icon = icon:CreateTexture(nil, "BORDER")
 	frame.icon:SetAllPoints()
 
-	local popout = CreateFrame("Button", nil, frame)
+	local popout = ns.NewQtyPopoutFrame(frame)
 	popout:SetPoint("RIGHT")
-	popout:SetWidth(HEIGHT/2) popout:SetHeight(HEIGHT)
-	popout:SetNormalTexture("Interface\\PaperDollInfoFrame\\UI-GearManager-FlyoutButton")
-	popout:SetHighlightTexture("Interface\\PaperDollInfoFrame\\UI-GearManager-FlyoutButton")
-	popout:GetNormalTexture():SetTexCoord(0.15625, 0.5, 0.84375, 0.5, 0.15625, 0, 0.84375, 0)
-	popout:GetHighlightTexture():SetTexCoord(0.15625, 1, 0.84375, 1, 0.15625, 0.5, 0.84375, 0.5)
-	popout:SetScript("OnClick", PopoutOnClick)
-	popout.SplitStack = PopoutSplitStack
+	popout:SetSize(HEIGHT/2, HEIGHT)
 	frame.popout = popout
 
 	local ItemPrice = frame:CreateFontString(nil, nil, "NumberFontNormal")
