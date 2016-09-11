@@ -18,9 +18,13 @@
 	I kindof half want to make a full parser for this
 --]]
 
-local MAJOR, MINOR = "LibItemSearch-1.0", 3
-local ItemSearch = LibStub:NewLibrary(MAJOR, MINOR)
-if not ItemSearch then return end
+-- local MAJOR, MINOR = "LibItemSearch-1.0", 3
+-- local ItemSearch = LibStub:NewLibrary(MAJOR, MINOR)
+-- if not ItemSearch then return end
+
+local myname, ns = ...
+ns.LibItemSearch = {}
+local ItemSearch = ns.LibItemSearch
 
 --[[ general search ]]--
 

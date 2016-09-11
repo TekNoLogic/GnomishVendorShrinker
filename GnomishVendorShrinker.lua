@@ -2,7 +2,9 @@
 local myname, ns = ...
 
 
-local ItemSearch = LibStub('LibItemSearch-1.0')
+local ItemSearch = ns.LibItemSearch
+ns.LibItemSearch = nil
+
 
 local NUMROWS, SCROLLSTEP = 14, 5
 
