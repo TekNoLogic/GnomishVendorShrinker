@@ -28,6 +28,29 @@ local function OnClick(self, button)
 end
 
 
+local function OnDragStart(self, button)
+	MerchantFrame.extendedCost = nil
+	PickupMerchantItem(self:GetID())
+	if self.extendedCost then MerchantFrame.extendedCost = self end
+end
+
+
+local function OnEnter(self)
+	GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+	GameTooltip:SetMerchantItem(self:GetID())
+	GameTooltip_ShowCompareItem()
+	MerchantFrame.itemHover = self:GetID()
+	if IsModifiedClick("DRESSUP") then ShowInspectCursor() else ResetCursor() end
+end
+
+
+local function OnLeave()
+	GameTooltip:Hide()
+	ResetCursor()
+	MerchantFrame.itemHover = nil
+end
+
+
 function ns.Purchase(id, quantity)
 	local _, _, _, _, available = GetMerchantItemInfo(id)
 	local max = GetMerchantItemMaxStack(id)
@@ -65,9 +88,15 @@ local function SetValue(self, i)
 	self.backdrop:SetShown(shown)
 
 	self.icon:SetTexture(itemTexture)
+	self.icon:SetVertexColor(ns.GetRowVertexColor(i))
 
 	local textcolor = ns.GetRowTextColor(i)
-	self.ItemName:SetText((numAvailable > -1 and ("["..numAvailable.."] ") or "").. textcolor.. (name or "<Loading item data>").. (itemStackCount > 1 and ("|r x"..itemStackCount) or ""))
+	local text =
+		(numAvailable > -1 and ("["..numAvailable.."] ") or "")..
+		textcolor..
+		(name or "<Loading item data>")..
+		(itemStackCount > 1 and ("|r x"..itemStackCount) or "")
+	self.ItemName:SetText(text)
 
 	self.AltCurrency:SetValue(i)
 
@@ -86,8 +115,6 @@ local function SetValue(self, i)
 	else
 		self.extendedCost = nil
 	end
-
-	self.icon:SetVertexColor(ns.GetRowVertexColor(i))
 end
 
 
@@ -95,19 +122,18 @@ function ns.NewMerchantItemFrame(parent)
 	local frame = CreateFrame("Button", nil, parent)
 	frame:SetHeight(HEIGHT)
 
-	frame.BuyItem = BuyItem
-
 	frame:SetHighlightTexture("Interface\\HelpFrame\\HelpFrameButton-Highlight")
 	frame:GetHighlightTexture():SetTexCoord(0, 1, 0, 0.578125)
 
 	frame:RegisterForClicks("AnyUp")
-	frame:SetScript('OnClick', OnClick)
 	frame:RegisterForDrag("LeftButton")
-	frame:SetScript('OnDragStart', function(self, button)
-		MerchantFrame.extendedCost = nil
-		PickupMerchantItem(self:GetID())
-		if self.extendedCost then MerchantFrame.extendedCost = self end
-	end)
+	frame:SetScript("OnClick", OnClick)
+	frame:SetScript("OnDragStart", OnDragStart)
+	frame:SetScript("OnEnter", OnEnter)
+	frame:SetScript("OnLeave", OnLeave)
+
+	frame.BuyItem = BuyItem
+	frame.SetValue = SetValue
 
 	local backdrop = frame:CreateTexture(nil, "BACKGROUND")
 	backdrop:SetAllPoints()
@@ -140,22 +166,6 @@ function ns.NewMerchantItemFrame(parent)
 	ItemName:SetPoint("RIGHT", AltCurrency, "LEFT", -GAP, 0)
 	ItemName:SetJustifyH("LEFT")
 	frame.ItemName = ItemName
-
-	frame:SetScript('OnEnter', function(self)
-		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-		GameTooltip:SetMerchantItem(self:GetID())
-		GameTooltip_ShowCompareItem()
-		MerchantFrame.itemHover = self:GetID()
-		if IsModifiedClick("DRESSUP") then ShowInspectCursor() else ResetCursor() end
-	end)
-
-	frame:SetScript('OnLeave', function()
-		GameTooltip:Hide()
-		ResetCursor()
-		MerchantFrame.itemHover = nil
-	end)
-
-	frame.SetValue = SetValue
 
 	return frame
 end
