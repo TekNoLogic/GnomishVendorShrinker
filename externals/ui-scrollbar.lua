@@ -1,8 +1,8 @@
 
-local lib, oldminor = LibStub:NewLibrary("tekKonfig-Scroll", 2)
-if not lib then return end
+local myname, ns = ...
 
-lib.bg = {
+
+local BACKDROP = {
 	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
 	tile = true,
 	tileSize = 16,
@@ -10,18 +10,50 @@ lib.bg = {
 	insets = { left = 0, right = 0, top = 5, bottom = 5 }
 }
 
+
+local function Decrement(self)
+	self:SetValue(self:GetValue() - self:GetValueStep())
+end
+
+
+local function Increment(self)
+	self:SetValue(self:GetValue() + self:GetValueStep())
+end
+
+
+local function OnClickUp(self)
+	self:GetParent():Decrement()
+end
+
+
+local function OnClickDown(self)
+	self:GetParent():Increment()
+end
+
+
+local function Sound()
+	PlaySound("UChatScrollButton")
+end
+
+
 -- Creates a scrollbar
 -- Parent is required, offset and step are optional
-function lib.new(parent, offset, step)
+function ns.NewScrollBar(parent, offset, step)
 	local f = CreateFrame("Slider", nil, parent)
 	f:SetWidth(16)
 
-	f:SetPoint("TOPRIGHT", 0 - (offset or 0), -16 - (offset or 0))
-	f:SetPoint("BOTTOMRIGHT", 0 - (offset or 0), 16 + (offset or 0))
+	f:SetPoint("TOP", 0, -16 - (offset or 0))
+	f:SetPoint("BOTTOM", 0, 16 + (offset or 0))
+	f:SetPoint("RIGHT", 0 - (offset or 0), 0)
+
+	f:SetValueStep(step or 1)
+
+	f.Decrement = Decrement
+	f.Increment = Increment
 
 	local up = CreateFrame("Button", nil, f)
 	up:SetPoint("BOTTOM", f, "TOP")
-	up:SetWidth(16) up:SetHeight(16)
+	up:SetSize(16, 16)
 	up:SetNormalTexture("Interface\\Buttons\\UI-ScrollBar-ScrollUpButton-Up")
 	up:SetPushedTexture("Interface\\Buttons\\UI-ScrollBar-ScrollUpButton-Down")
 	up:SetDisabledTexture("Interface\\Buttons\\UI-ScrollBar-ScrollUpButton-Disabled")
@@ -33,15 +65,12 @@ function lib.new(parent, offset, step)
 	up:GetHighlightTexture():SetTexCoord(1/4, 3/4, 1/4, 3/4)
 	up:GetHighlightTexture():SetBlendMode("ADD")
 
-	up:SetScript("OnClick", function(self)
-		local parent = self:GetParent()
-		parent:SetValue(parent:GetValue() - (step or parent:GetHeight()/2))
-		PlaySound("UChatScrollButton")
-	end)
+	up:SetScript("OnClick", OnClickUp)
+	up:SetScript("PostClick", Sound)
 
 	local down = CreateFrame("Button", nil, f)
 	down:SetPoint("TOP", f, "BOTTOM")
-	down:SetWidth(16) down:SetHeight(16)
+	down:SetSize(16, 16)
 	down:SetNormalTexture("Interface\\Buttons\\UI-ScrollBar-ScrollDownButton-Up")
 	down:SetPushedTexture("Interface\\Buttons\\UI-ScrollBar-ScrollDownButton-Down")
 	down:SetDisabledTexture("Interface\\Buttons\\UI-ScrollBar-ScrollDownButton-Disabled")
@@ -53,28 +82,28 @@ function lib.new(parent, offset, step)
 	down:GetHighlightTexture():SetTexCoord(1/4, 3/4, 1/4, 3/4)
 	down:GetHighlightTexture():SetBlendMode("ADD")
 
-	down:SetScript("OnClick", function(self)
-		local parent = self:GetParent()
-		parent:SetValue(parent:GetValue() + (step or parent:GetHeight()/2))
-		PlaySound("UChatScrollButton")
-	end)
+	down:SetScript("OnClick", OnClickDown)
+	down:SetScript("PostClick", Sound)
 
 	f:SetThumbTexture("Interface\\Buttons\\UI-ScrollBar-Knob")
 	local thumb = f:GetThumbTexture()
-	thumb:SetWidth(16) thumb:SetHeight(24)
+	thumb:SetSize(16, 24)
 	thumb:SetTexCoord(1/4, 3/4, 1/8, 7/8)
 
 	f:SetScript("OnValueChanged", function(self, value)
 		local min, max = self:GetMinMaxValues()
 		if value == min then up:Disable() else up:Enable() end
 		if value == max then down:Disable() else down:Enable() end
+		if self.Refresh then self:Refresh() end
 	end)
 
 	local border = CreateFrame("Frame", nil, f)
 	border:SetPoint("TOPLEFT", up, -5, 5)
 	border:SetPoint("BOTTOMRIGHT", down, 5, -3)
-	border:SetBackdrop(lib.bg)
-	border:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b, 0.5)
+	border:SetBackdrop(BACKDROP)
+	local r,g = TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g
+	local b,a = TOOLTIP_DEFAULT_COLOR.b, 0.5
+	border:SetBackdropBorderColor(r,g,b,a)
 
 	return f, up, down, border
 end

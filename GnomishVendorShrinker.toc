@@ -14,10 +14,10 @@ externals\events.lua
 externals\itemid.lua
 externals\size_to_fit.lua
 externals\tooltip_scanner.lua
+externals\ui-scrollbar.lua
 externals\ui-textinput.lua
 
 tekFunks\gsc.lua
-tekKonfig\tekKonfig.xml
 LibItemSearch-1.0.lua
 
 frames\AltCurrency.lua

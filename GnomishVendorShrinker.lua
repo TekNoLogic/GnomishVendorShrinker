@@ -47,9 +47,10 @@ function ns.OnLoad()
 	end
 
 
-	local scrollbar = LibStub("tekKonfig-Scroll").new(GVS, 0, SCROLLSTEP)
+	local scrollbar = ns.NewScrollBar(GVS, 0, SCROLLSTEP)
 	local offset = 0
-	local function Refresh()
+	function scrollbar:Refresh()
+		local offset = scrollbar:GetValue()
 		local n = GetMerchantNumItems()
 		local row, n_searchmatch = 1, 0
 		for i=1,n do
@@ -67,32 +68,28 @@ function ns.OnLoad()
 			rows[i]:Hide()
 		end
 	end
-	GVS.CURRENCY_DISPLAY_UPDATE = Refresh
-	GVS.BAG_UPDATE = Refresh
-	GVS.MERCHANT_UPDATE = Refresh
+	GVS.CURRENCY_DISPLAY_UPDATE = scrollbar.Refresh
+	GVS.BAG_UPDATE = scrollbar.Refresh
+	GVS.MERCHANT_UPDATE = scrollbar.Refresh
 
 
-	ns.MakeSearchField(GVS, Refresh)
-
-
-	local f = scrollbar:GetScript("OnValueChanged")
-	scrollbar:SetScript("OnValueChanged", function(self, value, ...)
-		offset = math.floor(value)
-		Refresh()
-		return f(self, value, ...)
-	end)
+	ns.MakeSearchField(GVS, scrollbar.Refresh)
 
 
 	local offset = 0
 	GVS:EnableMouseWheel(true)
 	GVS:SetScript("OnMouseWheel", function(self, value)
-		scrollbar:SetValue(scrollbar:GetValue() - value * SCROLLSTEP)
+		if value > 0 then
+			scrollbar:Decrement()
+		else
+			scrollbar:Increment()
+		end
 	end)
 	GVS:SetScript("OnShow", function(self, noreset)
 		local max = math.max(0, GetMerchantNumItems() - NUMROWS)
 		scrollbar:SetMinMaxValues(0, max)
 		scrollbar:SetValue(noreset and math.min(scrollbar:GetValue(), max) or 0)
-		Refresh()
+		scrollbar.Refresh()
 
 		GVS:RegisterEvent("BAG_UPDATE")
 		GVS:RegisterEvent("MERCHANT_UPDATE")
