@@ -24,7 +24,7 @@ function ns.OnLoad()
 	local GVS = ns.NewMainFrame()
 	GVS:SetWidth(315)
 	GVS:SetHeight(294)
-	GVS:SetPoint("TOPLEFT", 8, -67)
+	GVS:SetPoint("TOPLEFT", MerchantFrame, 8, -67)
 	GVS:Hide()
 
 
@@ -33,20 +33,12 @@ function ns.OnLoad()
 	MerchantBuyBackItem:SetPoint("BOTTOMRIGHT", -7, 33)
 
 
-	local function Show()
-		for i=1,12 do _G["MerchantItem"..i]:Hide() end
-		if GVS:IsShown() then GVS:GetScript("OnShow")(GVS, true) else GVS:Show() end
+	hooksecurefunc("SetMerchantFilter", function() GVS:GetScript("OnShow")(GVS) end)
+
+
+	if MerchantFrame:IsVisible() and MerchantFrame.selectedTab == 1 then
+		GVS:Show()
 	end
-	hooksecurefunc("MerchantFrame_UpdateMerchantInfo", Show)
-
-
-	hooksecurefunc("MerchantFrame_UpdateBuybackInfo", function()
-		GVS:Hide()
-		for i=1,12 do _G["MerchantItem"..i]:Show() end
-	end)
-
-
-	if MerchantFrame:IsVisible() and MerchantFrame.selectedTab == 1 then Show() end
 
 
 	-- Clean up our frame factories

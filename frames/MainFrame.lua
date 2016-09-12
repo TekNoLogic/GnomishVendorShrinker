@@ -10,7 +10,7 @@ local NUMROWS = 14
 
 
 function ns.NewMainFrame()
-	local GVS = CreateFrame("frame", nil, MerchantFrame)
+	local GVS = CreateFrame("frame", nil, MerchantBuyBackItem)
 
 	local search = ns.MakeSearchField(GVS)
 
@@ -62,17 +62,22 @@ function ns.NewMainFrame()
 		end
 	end)
 	GVS:SetScript("OnEvent", Refresh)
-	GVS:SetScript("OnShow", function(self, noreset)
+	GVS:SetScript("OnShow", function(self)
+		for i=1,12 do _G["MerchantItem"..i]:Hide() end
+
 		local max = math.max(0, GetMerchantNumItems() - NUMROWS)
 		scrollbar:SetMinMaxValues(0, max)
-		scrollbar:SetValue(noreset and math.min(scrollbar:GetValue(), max) or 0)
+		scrollbar:SetValue(0)
 		Refresh()
 
 		GVS:RegisterEvent("BAG_UPDATE")
 		GVS:RegisterEvent("MERCHANT_UPDATE")
 		GVS:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 	end)
-	GVS:SetScript("OnHide", GVS.UnregisterAllEvents)
+	GVS:SetScript("OnHide", function(self)
+		for i=1,12 do _G["MerchantItem"..i]:Show() end
+		self:UnregisterAllEvents()
+	end)
 
 	return GVS
 end
