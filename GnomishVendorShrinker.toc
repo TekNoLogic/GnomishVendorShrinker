@@ -22,10 +22,11 @@ LibItemSearch-1.0.lua
 
 frames\AltCurrency.lua
 frames\AltCurrencyItem.lua
+frames\MainFrame.lua
 frames\MerchantItem.lua
 frames\QtyPopout.lua
 frames\RowShader.lua
 frames\SearchField.lua
 
+Init.lua
 KnownScanner.lua
-GnomishVendorShrinker.lua

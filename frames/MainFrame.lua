@@ -6,30 +6,11 @@ local ItemSearch = ns.LibItemSearch
 ns.LibItemSearch = nil
 
 
-local NUMROWS, SCROLLSTEP = 14, 5
+local NUMROWS = 14
 
 
-local function Hide(frame)
-	frame:Hide()
-	frame.Show = frame.Hide
-end
-
-
-function ns.OnLoad()
-	Hide(MerchantNextPageButton)
-	Hide(MerchantPrevPageButton)
-	Hide(MerchantPageText)
-
-
+function ns.NewMainFrame()
 	local GVS = CreateFrame("frame", nil, MerchantFrame)
-	GVS:SetWidth(315)
-	GVS:SetHeight(294)
-	GVS:SetPoint("TOPLEFT", 8, -67)
-	GVS:SetScript("OnEvent", function(self, event, ...)
-		if self[event] then return self[event](self, event, ...) end
-	end)
-	GVS:Hide()
-
 
 	local rows = {}
 	for i=1,NUMROWS do
@@ -47,8 +28,7 @@ function ns.OnLoad()
 	end
 
 
-	local scrollbar = ns.NewScrollBar(GVS, 0, SCROLLSTEP)
-	local offset = 0
+	local scrollbar = ns.NewScrollBar(GVS, 0, 5)
 	function scrollbar:Refresh()
 		local offset = scrollbar:GetValue()
 		local n = GetMerchantNumItems()
@@ -64,19 +44,13 @@ function ns.OnLoad()
 			end
 		end
 		scrollbar:SetMinMaxValues(0, math.max(0, n_searchmatch - NUMROWS))
-		for i=row,NUMROWS do
-			rows[i]:Hide()
-		end
+		for i=row,NUMROWS do rows[i]:Hide() end
 	end
-	GVS.CURRENCY_DISPLAY_UPDATE = scrollbar.Refresh
-	GVS.BAG_UPDATE = scrollbar.Refresh
-	GVS.MERCHANT_UPDATE = scrollbar.Refresh
 
 
 	ns.MakeSearchField(GVS, scrollbar.Refresh)
 
 
-	local offset = 0
 	GVS:EnableMouseWheel(true)
 	GVS:SetScript("OnMouseWheel", function(self, value)
 		if value > 0 then
@@ -85,6 +59,7 @@ function ns.OnLoad()
 			scrollbar:Increment()
 		end
 	end)
+	GVS:SetScript("OnEvent", scrollbar.Refresh)
 	GVS:SetScript("OnShow", function(self, noreset)
 		local max = math.max(0, GetMerchantNumItems() - NUMROWS)
 		scrollbar:SetMinMaxValues(0, max)
@@ -96,34 +71,9 @@ function ns.OnLoad()
 		GVS:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 	end)
 	GVS:SetScript("OnHide", function()
-		GVS:UnregisterEvent("BAG_UPDATE")
-		GVS:UnregisterEvent("MERCHANT_UPDATE")
-		GVS:UnregisterEvent("CURRENCY_DISPLAY_UPDATE")
+		GVS:UnregisterAllEvents()
 		if StackSplitFrame:IsVisible() then StackSplitFrame:Hide() end
 	end)
 
-
-	-- Reanchor the buyback button, it acts weird when switching tabs otherwise...
-	MerchantBuyBackItem:ClearAllPoints()
-	MerchantBuyBackItem:SetPoint("BOTTOMRIGHT", -7, 33)
-
-
-	local function Show()
-		for i=1,12 do _G["MerchantItem"..i]:Hide() end
-		if GVS:IsShown() then GVS:GetScript("OnShow")(GVS, true) else GVS:Show() end
-	end
-	hooksecurefunc("MerchantFrame_UpdateMerchantInfo", Show)
-
-
-	hooksecurefunc("MerchantFrame_UpdateBuybackInfo", function()
-		GVS:Hide()
-		for i=1,12 do _G["MerchantItem"..i]:Show() end
-	end)
-
-
-	if MerchantFrame:IsVisible() and MerchantFrame.selectedTab == 1 then Show() end
-
-
-	-- Clean up our frame factories
-	for i,v in pairs(ns) do if i:match("^New") then ns[i] = nil end end
+	return GVS
 end
