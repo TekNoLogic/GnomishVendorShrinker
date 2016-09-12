@@ -8,7 +8,6 @@
 
 ## LoadManagers: AddonLoader
 ## X-LoadOn-Merchant: true
-## X-LoadOn-InterfaceOptions: GnomishVendorShrinker
 
 externals\events.lua
 externals\itemid.lua
