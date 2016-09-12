@@ -90,12 +90,16 @@ function ns.NewScrollBar(parent, offset, step)
 	thumb:SetSize(16, 24)
 	thumb:SetTexCoord(1/4, 3/4, 1/8, 7/8)
 
-	f:SetScript("OnValueChanged", function(self, value)
+	local function UpdateUpDown(self)
 		local min, max = self:GetMinMaxValues()
+		local value = self:GetValue()
 		if value == min then up:Disable() else up:Enable() end
 		if value == max then down:Disable() else down:Enable() end
 		if self.Refresh then self:Refresh() end
-	end)
+	end
+
+	f:HookScript("OnMinMaxChanged", UpdateUpDown)
+	f:HookScript("OnValueChanged", UpdateUpDown)
 
 	local border = CreateFrame("Frame", nil, f)
 	border:SetPoint("TOPLEFT", up, -5, 5)
