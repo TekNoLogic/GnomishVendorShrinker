@@ -63,6 +63,7 @@ function ns.NewMainFrame()
 	end)
 	GVS:SetScript("OnEvent", Refresh)
 	GVS:SetScript("OnShow", function(self)
+		-- These are used by the buyback frame, so we can't hide them forever
 		for i=1,12 do _G["MerchantItem"..i]:Hide() end
 
 		local max = math.max(0, GetMerchantNumItems() - NUMROWS)
