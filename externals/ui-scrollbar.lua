@@ -95,7 +95,6 @@ function ns.NewScrollBar(parent, offset, step)
 		local value = self:GetValue()
 		if value == min then up:Disable() else up:Enable() end
 		if value == max then down:Disable() else down:Enable() end
-		if self.Refresh then self:Refresh() end
 	end
 
 	f:HookScript("OnMinMaxChanged", UpdateUpDown)

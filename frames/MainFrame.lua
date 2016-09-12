@@ -12,7 +12,7 @@ local NUMROWS = 14
 function ns.NewMainFrame()
 	local GVS = CreateFrame("frame", nil, MerchantFrame)
 
-	local search = ns.MakeSearchField(GVS, scrollbar.Refresh)
+	local search = ns.MakeSearchField(GVS)
 
 	local rows = {}
 	for i=1,NUMROWS do
@@ -30,7 +30,7 @@ function ns.NewMainFrame()
 	end
 
 	local scrollbar = ns.NewScrollBar(GVS, 0, 5)
-	function scrollbar:Refresh()
+	local function Refresh()
 		local offset = scrollbar:GetValue()
 		local searchstring = search:GetText()
 		local n = GetMerchantNumItems()
@@ -48,6 +48,8 @@ function ns.NewMainFrame()
 		scrollbar:SetMinMaxValues(0, math.max(0, n_searchmatch - NUMROWS))
 		for i=row,NUMROWS do rows[i]:Hide() end
 	end
+	scrollbar:SetScript("OnValueChanged", Refresh)
+
 
 	search:SetScript("OnTextChanged", Refresh)
 
@@ -59,12 +61,12 @@ function ns.NewMainFrame()
 			scrollbar:Increment()
 		end
 	end)
-	GVS:SetScript("OnEvent", scrollbar.Refresh)
+	GVS:SetScript("OnEvent", Refresh)
 	GVS:SetScript("OnShow", function(self, noreset)
 		local max = math.max(0, GetMerchantNumItems() - NUMROWS)
 		scrollbar:SetMinMaxValues(0, max)
 		scrollbar:SetValue(noreset and math.min(scrollbar:GetValue(), max) or 0)
-		scrollbar.Refresh()
+		Refresh()
 
 		GVS:RegisterEvent("BAG_UPDATE")
 		GVS:RegisterEvent("MERCHANT_UPDATE")
