@@ -5,17 +5,12 @@ local myname, ns = ...
 local BORDER_TEXTURE = "Interface\\Common\\Common-Input-Border"
 
 
-local function OnShow(self)
-  self.placeholder:Show()
-end
-
-
 local function OnEditFocusGained(self)
   self.placeholder:Hide()
 end
 
 
-local function OnEditFocusLost(self)
+local function ShowPlaceholderIfEmpty(self)
 	if self:GetText() == "" then self.placeholder:Show() end
 end
 
@@ -51,9 +46,10 @@ function ns.NewTextInput(parent)
   placeholder:SetTextColor(0.75, 0.75, 0.75, 1)
   editbox.placeholder = placeholder
 
-  editbox:SetScript("OnShow", OnShow)
-  editbox:SetScript("OnEditFocusGained", OnEditFocusGained)
-  editbox:SetScript("OnEditFocusLost", OnEditFocusLost)
+  editbox:HookScript("OnEditFocusGained", OnEditFocusGained)
+  editbox:HookScript("OnEditFocusLost", ShowPlaceholderIfEmpty)
+  editbox:HookScript("OnTextSet", ShowPlaceholderIfEmpty)
+  
   editbox:SetScript("OnEscapePressed", editbox.ClearFocus)
   editbox:SetScript("OnEnterPressed", editbox.ClearFocus)
 
