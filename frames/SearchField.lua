@@ -24,6 +24,7 @@ function ns.MakeSearchField(parent)
   end)
 
   editbox:SetScript("OnLeave", GameTooltip_Hide)
+  editbox:SetScript("OnShow", function(self) self:SetText("") end)
 
   ns.MakeSearchField = nil
 

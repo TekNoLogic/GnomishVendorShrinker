@@ -6,7 +6,6 @@ local BORDER_TEXTURE = "Interface\\Common\\Common-Input-Border"
 
 
 local function OnShow(self)
-  self:SetText("")
   self.placeholder:Show()
 end
 
