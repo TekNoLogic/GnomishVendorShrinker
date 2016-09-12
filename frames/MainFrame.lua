@@ -70,10 +70,7 @@ function ns.NewMainFrame()
 		GVS:RegisterEvent("MERCHANT_UPDATE")
 		GVS:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 	end)
-	GVS:SetScript("OnHide", function()
-		GVS:UnregisterAllEvents()
-		if StackSplitFrame:IsVisible() then StackSplitFrame:Hide() end
-	end)
+	GVS:SetScript("OnHide", GVS.UnregisterAllEvents)
 
 	return GVS
 end

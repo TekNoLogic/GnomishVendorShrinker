@@ -16,6 +16,11 @@ local function OnClick(self, button)
 end
 
 
+local function OnHide()
+	if StackSplitFrame:IsVisible() then StackSplitFrame:Hide() end
+end
+
+
 local function PopoutSplitStack(self, qty)
 	ns.Purchase(self:GetParent():GetID(), qty)
 end
@@ -30,6 +35,7 @@ function ns.NewQtyPopoutFrame(parent)
 	frame:GetHighlightTexture():SetTexCoord(0.15625, 1, 0.84375, 1, 0.15625, 0.5, 0.84375, 0.5)
 
 	frame:SetScript("OnClick", OnClick)
+	frame:SetScript("OnHide", OnHide)
 
 	frame.SplitStack = PopoutSplitStack
 
