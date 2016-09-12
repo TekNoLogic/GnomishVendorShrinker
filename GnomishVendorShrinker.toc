@@ -10,13 +10,13 @@
 ## X-LoadOn-Merchant: true
 
 externals\events.lua
+externals\gsc.lua
 externals\itemid.lua
 externals\size_to_fit.lua
 externals\tooltip_scanner.lua
 externals\ui-scrollbar.lua
 externals\ui-textinput.lua
 
-tekFunks\gsc.lua
 LibItemSearch-1.0.lua
 
 frames\AltCurrency.lua
