@@ -6,30 +6,13 @@ function ns.MakeSearchField(GVS, Refresh)
   local editbox = ns.NewTextInput(GVS)
   editbox:SetPoint("BOTTOMLEFT", GVS, "TOPLEFT", 55, 9)
 
-  editbox:SetScript("OnEditFocusGained", function(self)
-  	if not GVS.searchstring then
-  		self:SetText("")
-  		self:SetTextColor(1,1,1,1)
-  	end
-  end)
-
-  editbox:SetScript("OnEditFocusLost", function(self)
-  	if self:GetText() == "" then
-  		self:SetText("Search...")
-  		self:SetTextColor(0.75, 0.75, 0.75, 1)
-  	end
-  end)
-
   editbox:SetScript("OnTextChanged", function(self)
   	local t = self:GetText()
   	GVS.searchstring = t ~= "" and t ~= "Search..." and t:lower() or nil
   	Refresh()
   end)
 
-  editbox:SetScript("OnShow", function(self)
-  	self:SetText("Search...")
-  	self:SetTextColor(0.75, 0.75, 0.75, 1)
-  end)
+  editbox.placeholder:SetText("Search...")
 
   editbox:SetScript("OnEnter", function(self)
   	GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
@@ -49,4 +32,6 @@ function ns.MakeSearchField(GVS, Refresh)
   editbox:SetScript("OnLeave", GameTooltip_Hide)
 
   ns.MakeSearchField = nil
+
+  return editbox
 end
