@@ -12,7 +12,7 @@ local NUMROWS = 14
 function ns.NewMainFrame()
 	local GVS = CreateFrame("frame", nil, MerchantBuyBackItem)
 
-	local search = ns.MakeSearchField(GVS)
+	local search = ns.NewSearchField(GVS)
 
 	local rows = {}
 	for i=1,NUMROWS do

@@ -2,7 +2,7 @@
 local myname, ns = ...
 
 
-function ns.MakeSearchField(parent)
+function ns.NewSearchField(parent)
   local editbox = ns.NewTextInput(parent)
   editbox:SetPoint("BOTTOMLEFT", parent, "TOPLEFT", 55, 9)
 
@@ -25,8 +25,6 @@ function ns.MakeSearchField(parent)
 
   editbox:SetScript("OnLeave", GameTooltip_Hide)
   editbox:SetScript("OnShow", function(self) self:SetText("") end)
-
-  ns.MakeSearchField = nil
 
   return editbox
 end
