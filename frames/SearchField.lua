@@ -2,15 +2,9 @@
 local myname, ns = ...
 
 
-function ns.MakeSearchField(GVS, Refresh)
-  local editbox = ns.NewTextInput(GVS)
-  editbox:SetPoint("BOTTOMLEFT", GVS, "TOPLEFT", 55, 9)
-
-  editbox:SetScript("OnTextChanged", function(self)
-  	local t = self:GetText()
-  	GVS.searchstring = t ~= "" and t ~= "Search..." and t:lower() or nil
-  	Refresh()
-  end)
+function ns.MakeSearchField(parent)
+  local editbox = ns.NewTextInput(parent)
+  editbox:SetPoint("BOTTOMLEFT", parent, "TOPLEFT", 55, 9)
 
   editbox.placeholder:SetText("Search...")
 

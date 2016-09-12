@@ -12,6 +12,8 @@ local NUMROWS = 14
 function ns.NewMainFrame()
 	local GVS = CreateFrame("frame", nil, MerchantFrame)
 
+	local search = ns.MakeSearchField(GVS, scrollbar.Refresh)
+
 	local rows = {}
 	for i=1,NUMROWS do
 		local row = ns.NewMerchantItemFrame(GVS)
@@ -27,15 +29,15 @@ function ns.NewMainFrame()
 		rows[i] = row
 	end
 
-
 	local scrollbar = ns.NewScrollBar(GVS, 0, 5)
 	function scrollbar:Refresh()
 		local offset = scrollbar:GetValue()
+		local searchstring = search:GetText()
 		local n = GetMerchantNumItems()
 		local row, n_searchmatch = 1, 0
 		for i=1,n do
 			local link = GetMerchantItemLink(i)
-			if ItemSearch:Find(link, GVS.searchstring) then
+			if ItemSearch:Find(link, searchstring) then
 				if n_searchmatch >= offset and n_searchmatch < offset + NUMROWS then
 					rows[row]:SetValue(i)
 					row = row + 1
@@ -47,9 +49,7 @@ function ns.NewMainFrame()
 		for i=row,NUMROWS do rows[i]:Hide() end
 	end
 
-
-	ns.MakeSearchField(GVS, scrollbar.Refresh)
-
+	search:SetScript("OnTextChanged", Refresh)
 
 	GVS:EnableMouseWheel(true)
 	GVS:SetScript("OnMouseWheel", function(self, value)

@@ -29,7 +29,7 @@ local ItemSearch = ns.LibItemSearch
 --[[ general search ]]--
 
 function ItemSearch:Find(itemLink, search)
-	if not search then
+	if not search or search == "" then
 		return true
 	end
 
