@@ -40,6 +40,8 @@ function ns.OnLoad()
 		GVS:Show()
 	end
 
+	-- Reparent the first 10 MerchantItem frames, so they only appear for buyback
+	for i=1,10 do _G["MerchantItem"..i]:SetParent(MerchantItem11) end
 
 	-- Clean up our frame factories
 	for i,v in pairs(ns) do if i:match("^New") then ns[i] = nil end end

@@ -63,9 +63,6 @@ function ns.NewMainFrame()
 	end)
 	GVS:SetScript("OnEvent", Refresh)
 	GVS:SetScript("OnShow", function(self)
-		-- These are used by the buyback frame, so we can't hide them forever
-		for i=1,12 do _G["MerchantItem"..i]:Hide() end
-
 		local max = math.max(0, GetMerchantNumItems() - NUMROWS)
 		scrollbar:SetMinMaxValues(0, max)
 		scrollbar:SetValue(0)
@@ -75,10 +72,7 @@ function ns.NewMainFrame()
 		GVS:RegisterEvent("MERCHANT_UPDATE")
 		GVS:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 	end)
-	GVS:SetScript("OnHide", function(self)
-		for i=1,12 do _G["MerchantItem"..i]:Show() end
-		self:UnregisterAllEvents()
-	end)
+	GVS:SetScript("OnHide", GVS.UnregisterAllEvents)
 
 	return GVS
 end
