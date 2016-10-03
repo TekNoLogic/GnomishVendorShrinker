@@ -1,3 +1,10 @@
+### 7.0.0.20-Beta
+
+* Red-out lines for recipes that require a rank we don't have yet
+* Add toys to known scanner
+* Heavy refactoring under the hood
+
+
 ### 7.0.0.19-Beta
 
 * Bump to fix botched releases on WoWI and Wowace
