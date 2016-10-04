@@ -20,7 +20,6 @@ function ns.OnLoad()
 	GVS:SetWidth(315)
 	GVS:SetHeight(294)
 	GVS:SetPoint("TOPLEFT", MerchantFrame, 8, -67)
-	GVS:Hide()
 
 	-- Reanchor the buyback button, it acts weird when switching tabs otherwise...
 	MerchantBuyBackItem:ClearAllPoints()
