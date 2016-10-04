@@ -1,3 +1,8 @@
+### 7.0.0.21-Beta
+
+* Fix blank list when not loaded on demand
+
+
 ### 7.0.0.20-Beta
 
 * Red-out lines for recipes that require a rank we don't have yet
