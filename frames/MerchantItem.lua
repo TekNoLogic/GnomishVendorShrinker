@@ -7,6 +7,38 @@ local HEIGHT = 21
 local ICONSIZE = 17
 
 
+local function PriceIsAltCurrency(index)
+	for i=1,MAX_ITEM_COST do
+		local _, _, _, currencyName = GetMerchantItemCostItem(index, i)
+		if currencyName then return true end
+	end
+end
+
+
+local function HasAllCommonBarterItems(index)
+	for i=1,MAX_ITEM_COST do
+		local _, _, link = GetMerchantItemCostItem(index, i)
+		if link then
+			local _, _, quality = GetItemInfo(link)
+			if quality >= LE_ITEM_QUALITY_UNCOMMON then return false end
+		end
+	end
+	return true
+end
+
+
+local function IsHeirloom(index)
+	local id = GetMerchantItemID(index)
+	return id and C_Heirloom.IsItemHeirloom(id)
+end
+
+
+local function RequiresConfirmation(index)
+	if IsHeirloom(index) then return true end
+	if not HasAllCommonBarterItems(index) then return true end
+end
+
+
 local function OnClick(self, button)
 	local id = self:GetID()
 	local hasaltcurrency = (GetMerchantItemCostInfo(id) > 0)
@@ -18,9 +50,14 @@ local function OnClick(self, button)
 		HandleModifiedItemClick(GetMerchantItemLink(id))
 
 	elseif hasaltcurrency then
-		local link = GetMerchantItemLink(id)
-		self.link, self.texture = GetMerchantItemLink(id), self.icon:GetTexture()
-		MerchantFrame_ConfirmExtendedItemCost(self)
+		if not PriceIsAltCurrency(id) and not RequiresConfirmation(id) then
+			-- We're trading an item like [Tricky Treat], not using a "real" currency
+			self:BuyItem()
+		else
+			self.link = GetMerchantItemLink(id)
+			self.texture = self.icon:GetTexture()
+			MerchantFrame_ConfirmExtendedItemCost(self)
+		end
 
 	else
 		self:BuyItem()
