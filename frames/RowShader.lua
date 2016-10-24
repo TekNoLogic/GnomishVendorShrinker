@@ -10,6 +10,7 @@ local GARRISON_ICONS = {[1001489] = true, [1001490] = true, [1001491] = true}
 
 local function Knowable(link)
 	local id = ns.ids[link]
+	if not id then return false end
 	if C_Heirloom.IsItemHeirloom(id) then return true end
 
 	local _, _, _, _, _, class, _, _, _, texture = GetItemInfo(link)
@@ -84,7 +85,7 @@ function ns.GetRowTextColor(index)
 	if Knowable(link) and ns.knowns[link] then return QUALITY_COLORS[0] end
 
 	local _, _, quality = GetItemInfo(link)
-	return QUALITY_COLORS[quality]
+	return QUALITY_COLORS[quality or 1]
 end
 
 
