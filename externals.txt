@@ -1,7 +1,0 @@
-events.lua
-gsc.lua
-itemid.lua
-size_to_fit.lua
-tooltip_scanner.lua
-ui-scrollbar.lua
-ui-textinput.lua
