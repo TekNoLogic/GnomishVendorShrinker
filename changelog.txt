@@ -1,3 +1,9 @@
+### 7.0.0.23-Beta
+
+* Fix issues with sightless eye vendor
+  Why the fuck anyone would want to come down here is beyond me.
+
+
 ### 7.0.0.22-Beta
 
 * Fix buying items from vendors using [Tricky Treat]
