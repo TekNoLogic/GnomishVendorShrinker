@@ -136,6 +136,11 @@ local function SetValue(self, i)
 	self.ItemName:SetText(text)
 
 	self.AltCurrency:SetValue(i)
+	if self.AltCurrency:IsShown() then
+	    self.ItemName:SetPoint("RIGHT", self.AltCurrency, "LEFT", -GAP, 0)
+	else
+	    self.ItemName:SetPoint("RIGHT", self.ItemPrice, "LEFT", -GAP, 0)
+	end
 
 	if extendedCost then
 		self.link, self.texture, self.extendedCost = link, itemTexture, true

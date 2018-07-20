@@ -26,7 +26,13 @@ function ns.OnLoad()
 	MerchantBuyBackItem:SetPoint("BOTTOMRIGHT", -7, 33)
 
 	-- The little class select dropdown show trigget a refresh
-	hooksecurefunc("SetMerchantFilter", function() GVS:GetScript("OnShow")(GVS) end)
+	hooksecurefunc("SetMerchantFilter", function()
+		if GVS.Merchant ~= UnitGUID("npc") then
+			GVS:GetScript("OnShow")(GVS)
+		else
+			GVS:GetScript("OnEvent")(GVS)
+		end
+	end)
 
 	-- Force show when we're loaded on demand and the tab is already selected
 	if MerchantFrame:IsVisible() and MerchantFrame.selectedTab == 1 then
