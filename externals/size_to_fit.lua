@@ -29,5 +29,7 @@ function ns.SizeToFit(self)
 
 	-- Now resize ourself
 	local _, _, width, height = self:GetBoundsRect()
-	self:SetSize(width, height)
+	if(width ~= nil and height ~= nil) then
+		self:SetSize(width, height)
+	end
 end
