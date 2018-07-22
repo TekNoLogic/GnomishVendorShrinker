@@ -41,7 +41,7 @@ end
 
 local function OnClick(self, button)
 	local id = self:GetID()
-	local hasaltcurrency = (GetMerchantItemCostInfo(id) > 0)
+	local hasaltcurrency = ((GetMerchantItemCostInfo(id) > 0) and (select(4,GetMerchantItemCostItem(id, 1)) ~= "Garrison Resources"))
 
 	if IsAltKeyDown() and not hasaltcurrency then
 		self:BuyItem(true)
