@@ -38,10 +38,14 @@ local function RequiresConfirmation(index)
 	if not HasAllCommonBarterItems(index) then return true end
 end
 
+local alt_click_exceptions = {}
+alt_click_exceptions[GetCurrencyInfo(824)] = true
+-- Add any other exceptional currencies here
 
 local function OnClick(self, button)
 	local id = self:GetID()
-	local hasaltcurrency = (GetMerchantItemCostInfo(id) > 0)
+	local currencyname = select(4,GetMerchantItemCostItem(id, 1))
+	local hasaltcurrency = ((GetMerchantItemCostInfo(id) > 0) and (alt_click_exceptions[currencyname] == nil))
 
 	if IsAltKeyDown() and not hasaltcurrency then
 		self:BuyItem(true)
